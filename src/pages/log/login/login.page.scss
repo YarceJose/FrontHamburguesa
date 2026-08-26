@@ -1,0 +1,43 @@
+*{
+  outline: 1px solid burlywood;
+}
+
+.login{
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  top: 30px;
+}
+
+.login h1{
+  color: var(--color-text-primary);
+}
+
+.login div{
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.login-sabor{
+  color: var(--color-text-primary);
+  font-size: 20px;
+}
+
+.login-sabor span{
+  color: var(--color-cuartiary);
+  font-weight: bold;
+  font-size: 40px;
+}
+
+.aside-Component{
+  position: relative;
+  top: 120px;
+  left: -4px;
+}

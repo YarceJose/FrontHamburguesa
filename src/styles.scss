@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+:root{
+  /**Colores primarios para produccion**/
+    --color-primary: #E73F1E;
+    --color-secondary: #FB6C00;
+    --color-tertiary: #F9B637;
+    --color-background: #002455;
+    --color-cuartiary: #C00707;
+
+  /***Colores secundarios para pruebas****/
+
+
+  /**Colores de texto**/
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #000000;
+
+
+  /**Diseño global**/
+  body{
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--color-background);
+  }
+}
