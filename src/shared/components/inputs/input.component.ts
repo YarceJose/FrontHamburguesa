@@ -1,18 +1,17 @@
-import { Component, input } from "@angular/core";
-import {LucideAngularModule, Mail} from 'lucide-angular'
+import { Component, input, model } from '@angular/core';
 
 @Component({
-  selector: 'input-component',
+  selector: 'app-input',
   standalone: true,
-  imports: [LucideAngularModule],
-  templateUrl: './Inputs.component.html',
-  styleUrls: ['./Inputs.component.scss'],
+  imports: [],
+  templateUrl: './input.component.html',
+  styleUrl: './input.component.scss',
 })
-
-export class InputCoponent{
-  type = input <string>('text')
-  width = input <number>(30)
-  Height = input <number>(10)
-  placeholder = input <string>('title')
-  //Iconos
+export class InputComponent {
+  readonly type = input<'text' | 'email' | 'password' | 'number' | 'search'>('text');
+  readonly width = input<number>(30);
+  readonly height = input<number>(10);
+  readonly placeholder = input<string>('title');
+  readonly id = input.required<string>();
+  readonly value = model<string>('');
 }
