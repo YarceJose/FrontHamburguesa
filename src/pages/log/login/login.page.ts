@@ -1,16 +1,16 @@
-import { Component, signal } from '@angular/core';
-
-import { AsideComponent } from '../../../shared/components/aside/aside.component';
-
+import { Component, signal, input } from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  imports: [AsideComponent],
+  imports: [ NgOptimizedImage],
 })
 export class LoginPage {
-  height = signal<number>(600);
+  height = signal<number>(450);
+
+  Empresa = input<string>("Damon Apolo");
 
   constructor() {}
 }
