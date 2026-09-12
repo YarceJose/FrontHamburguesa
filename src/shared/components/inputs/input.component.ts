@@ -4,10 +4,10 @@ import { Component, input, model } from '@angular/core';
   selector: 'app-input',
   standalone: true,
   imports: [],
-  templateUrl: './menu.page.html',
-  styleUrl: './menu.page.scss',
+  templateUrl: './input.component.html',
+  styleUrl: './input.component.scss',
 })
-export class MenuPage {
+export class InputComponent {
   readonly type = input<'text' | 'email' | 'password' | 'number' | 'search'>('text');
   readonly width = input<number>(30);
   readonly height = input<number>(10);
