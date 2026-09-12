@@ -1,0 +1,28 @@
+.Input{
+  border: none;
+  color: var(--color-text-secondary);
+  border-radius: 5px;
+  box-shadow: 0 0 2px 1px  rgba(0, 0, 0, 0.14);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-input{
+  position: relative;
+  left: 5px;
+}
+
+.input-label{
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  border: none;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  width: -2px;
+}

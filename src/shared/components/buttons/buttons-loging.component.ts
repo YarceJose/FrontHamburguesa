@@ -8,6 +8,6 @@ import {Component, input} from '@angular/core';
 })
 export class ButtonsLogingComponent {
 
-  title = input<string>('Iniciar sesion');
+  title = input<string>('Iniciar Sesión');
 
 }

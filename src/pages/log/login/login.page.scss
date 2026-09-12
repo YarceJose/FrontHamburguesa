@@ -1,43 +1,62 @@
-*{
-  outline: 1px solid burlywood;
-}
+// *{
+//   outline: 1px solid burlywood;
+// }
 
 .login{
-  padding: 5px;
+  height: 25rem;
+  padding: 0px;
   display: flex;
-  justify-content: center;
-  justify-items: center;
+  justify-items: start;
   align-items: center;
   flex-direction: column;
   position: relative;
-  top: 30px;
+  top: 40px;
 }
 
 .login h1{
   color: var(--color-text-primary);
-}
-
-.login div{
-  flex-direction: column;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
+  margin-bottom: -10px;
 }
 
 .login-sabor{
+  padding: 2px;
+  display: flex;
+  text-align: center;
   color: var(--color-text-primary);
-  font-size: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  flex-direction: column;
+  margin-bottom: -10px;
+  gap: -25px;
 }
 
 .login-sabor span{
   color: var(--color-cuartiary);
   font-weight: bold;
-  font-size: 40px;
+  font-size: 50px;
+  margin: 0;
+}
+
+.login-gestion{
+  width: 15rem;
+  padding: 2px;
+  text-align: center;
+  color: var(--color-text-primary);
+}
+
+.login-logo{
+  width: 400px;
+  height: 200px;
+  margin-bottom: -20px;
+}
+
+.login-logo img{
+  box-sizing: content-box;
 }
 
 .aside-Component{
   position: relative;
-  top: 120px;
+  top: 50px;
   left: -4px;
+  color: var(--color-cuartiary);
 }
