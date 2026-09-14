@@ -1,0 +1,89 @@
+@use 'abstracts' as *;
+
+.menu{
+  position: absolute;
+  flex-direction: column;
+}
+
+.menu h1{
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+  position: absolute;
+  left: 12em;
+  top: 3em;
+  @include respond(tablet) {
+    font-size: 1.5rem;
+    left: 18em;
+    top: 3em;
+  }
+
+  @include respond(desktop) {
+    font-size: 2rem;
+    left: 20em;
+    top: 3em;
+  }
+}
+
+.menu-logo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 15em;
+  top: 0em;
+
+  @include respond(tablet) {
+    left: 35em;
+    top: 0;
+  }
+
+  @include respond(desktop) {
+    left: 50em;
+    top: 0em;
+  }
+}
+.menu-logo img{
+  width: 150px;
+  height: 150px;
+  @include respond(tablet) {
+    width: 300px;
+    height: 300px;
+  }
+
+  @include respond(desktop) {
+    width: 350px;
+    height: 310px;
+  }
+}
+
+.menu-cards{
+  width: 100%;
+  padding: 5px;
+  padding-top: 30px;
+  background-color: var(--color-text-primary);
+  position: absolute;
+  top: 11em;
+  left: 0;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+
+  @include respond(tablet) {
+    top: 15em;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0px;
+    padding-top: 7em;
+  }
+
+  @include respond(desktop) {
+    top: 20em;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0px;
+    padding-top: 7em;
+  }
+}

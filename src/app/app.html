@@ -1,5 +1,7 @@
-<circle-component [color]="color0()" [left]="-80" [top]="-80" [size]="250" [maskImage]="maskImage()" />
-<circle-component [color]="color1()" [left]="-50" [top]="120" [size]="230"  />
-<circle-component [color]="color2()" [left]="280" [top]="120" [size]="250" [maskImage]="maskImage()" />
-<circle-component [color]="color3()" [left]="280" [top]="-80" [size]="200" />
+<div class="hero-canvas">
+  <app-circle-component [color]="color0()" [left]="-80" [top]="-280" [size]="700" [maskImage]="maskImage()"/>
+  <app-circle-component [color]="color1()" [left]="-40" [top]="280" [size]="500" />
+  <app-circle-component [color]="color2()" [left]="600" [top]="100" [size]="700" [maskImage]="maskImage()" />
+  <app-circle-component [color]="color3()" [left]="700" [top]="-100" [size]="500" />
+</div>
 <router-outlet></router-outlet>

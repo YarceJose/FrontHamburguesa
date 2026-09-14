@@ -1,0 +1,92 @@
+@use 'abstracts' as *;
+
+.card{
+  width: 190px;
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 0.8em;
+  align-items: center;
+  background-color: var(--color-text-primary);
+  border-radius: 20px;
+  &:hover{
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    transform: scale(1.02);
+    transition: all 0.3s ease-in-out;
+  }
+
+  @include respond(tablet) {
+    width: 310px;
+    height: 340px;
+  }
+  @include respond(desktop) {
+    width: 410px;
+    height: 440px;
+  }
+}
+
+.menu-cards{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -1em;
+}
+
+.menu-cards img{
+  border-radius: 20px;
+  width: 160px;
+  height: 100px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  @include respond(tablet) {
+    width: 200px;
+    height: 160px;
+  }
+
+  @include respond(desktop) {
+    width: 340px;
+    height: 200px;
+  }
+}
+
+.card h2{
+  width: 150px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-text-secondary);
+  position: relative;
+  left: -0.5em;
+  top: -1em;
+  @include respond(tablet) {
+    width: 250px;
+    font-size: 1.5rem;
+    left: 0em;
+  }
+  @include respond(desktop) {
+    width: 350px;
+    font-size: 2rem;
+    left: 0em;
+  }
+}
+
+.card-price{
+  width: 150px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-tertiary);
+  position: relative;
+  left: -0.5em;
+  top: -1em;
+
+  @include respond(tablet) {
+    width: 250px;
+    font-size: 1.5rem;
+    left: 0em;
+  }
+  @include respond(desktop) {
+    width: 350px;
+    font-size: 2rem;
+    left: 0em;
+  }
+}

@@ -1,7 +1,7 @@
 import { Component, signal, input } from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 @Component({
-  selector: 'app-login',
+  selector: 'app-login-page',
   standalone: true,
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],

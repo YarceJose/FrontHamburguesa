@@ -1,0 +1,20 @@
+@use 'abstracts' as *;
+
+.hero-canvas {
+  position: relative;
+  transform-origin: top left;
+  transform: scale(0.34); // base mobile — ajusta según pruebes visualmente
+
+  @include respond(tablet) {
+    transform: scale(0.7);
+  }
+
+  @include respond(desktop) {
+    transform: scale(1); // tamaño original, el que ya tenías calibrado
+  }
+}
+*{
+  outline: 1px solid black;
+}
+
+
