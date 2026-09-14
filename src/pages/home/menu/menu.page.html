@@ -1,0 +1,18 @@
+
+<article class="menu">
+    <h1>Menú</h1>
+    <div class="menu-logo">
+      <img src="../../../assets/logo.png" alt="Hamburguesa">
+    </div>
+</article>
+<section class="menu-items">
+  <section class="menu-cards">
+  @for (producto of productos; track producto.title) {
+    <app-cards-component
+      [title]="producto.title"
+      [price]="producto.price"
+      [url]="producto.url">
+    </app-cards-component>
+  }
+  </section>
+</section>
