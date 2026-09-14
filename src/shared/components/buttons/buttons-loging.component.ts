@@ -2,7 +2,7 @@ import {Component, input} from '@angular/core';
 
 
 @Component({
-  selector: 'buttons-loging',
+  selector: 'app-buttons-loging-component',
   templateUrl: './buttons-loging.component.html',
   styleUrls: ['./buttons-loging.component.scss']
 })

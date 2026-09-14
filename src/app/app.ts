@@ -1,7 +1,6 @@
 import { Component, signal , input} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CircleComponent} from '../shared/components/circle/circle.component';
-
 @Component({
   imports: [RouterOutlet,CircleComponent],
   selector: 'app-root',
