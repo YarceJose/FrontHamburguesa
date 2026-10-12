@@ -6,21 +6,27 @@
 }
 
 .menu h1{
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: bold;
   text-align: center;
   margin-bottom: 1rem;
   color: var(--color-text-primary);
   position: absolute;
-  left: 12em;
+  left: 10em;
   top: 3em;
-  @include respond(tablet) {
+
+  @include respond(sm) {
+    font-size: 1.2rem;
+    left: 9em;
+    top: 3em;
+  }
+  @include respond(md) {
     font-size: 1.5rem;
-    left: 18em;
+    left: 15em;
     top: 3em;
   }
 
-  @include respond(desktop) {
+    @include respond(lg) {
     font-size: 2rem;
     left: 20em;
     top: 3em;
@@ -32,28 +38,37 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 15em;
+  left: 14em;
   top: 0em;
 
-  @include respond(tablet) {
-    left: 35em;
-    top: 0;
+  @include respond(sm) {
+    left: 15em;
+    top: 0em;
+  }
+  @include respond(md) {
+    left: 30em;
+    top: 0em;
   }
 
-  @include respond(desktop) {
+    @include respond(lg) {
     left: 50em;
     top: 0em;
   }
 }
+
 .menu-logo img{
-  width: 150px;
-  height: 150px;
-  @include respond(tablet) {
-    width: 300px;
-    height: 300px;
+  width: 100px;
+  height: 100px;
+  @include respond(sm) {
+    width: 110px;
+    height: 110px;
+  }
+  @include respond(md) {
+    width: 200px;
+    height: 200px;
   }
 
-  @include respond(desktop) {
+    @include respond(lg) {
     width: 350px;
     height: 310px;
   }
@@ -65,25 +80,33 @@
   padding-bottom: 20px;
   background-color: var(--color-text-primary);
   position: absolute;
-  top: 17em;
+  top: 12em;
   left: 0;
   display: grid;
   justify-content: center;
   align-items: center;
   grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+  gap: 10px;
 
-  @include respond(tablet) {
+  @include respond(sm) {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    gap: 17px;
+  }
+
+  @include respond(md) {
     top: 15em;
     grid-template-columns: repeat(2, 1fr);
     padding-top: 20px;
-  padding-bottom: 20px;
+    padding-bottom: 20px;
+    gap: 30px;
   }
 
-  @include respond(desktop) {
-    top: 20em;
+    @include respond(lg) {
+    top: 25em;
     grid-template-columns: repeat(3, 1fr);
     padding-top: 20px;
     padding-bottom: 20px;
+    gap: 50px;
   }
 }

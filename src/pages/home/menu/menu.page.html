@@ -5,7 +5,9 @@
       <img src="../../../assets/logo.png" alt="Hamburguesa">
     </div>
 </article>
+
 <section class="menu-items">
+  <app-nav-menu></app-nav-menu>
   <section class="menu-cards">
   @for (producto of productos; track producto.title) {
     <app-cards-component

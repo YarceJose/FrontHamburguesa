@@ -1,28 +1,36 @@
 @use 'abstracts' as *;
 
 .card{
-  width: 170px;
+  width: 160px;
   height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 0.8em;
+  margin-left: 0.5em;
   align-items: center;
-  background-color: var(--color-text-secondary);
+  background-color: var(--color-text-primary);
   border-radius: 20px;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.25);
   &:hover{
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
     transform: scale(1.02);
     transition: all 0.3s ease-in-out;
   }
 
-  @include respond(tablet) {
-    width: 310px;
-    height: 340px;
+  @include respond(sm) {
+    width: 180px;
+    height: 220px;
+    margin-left: 0.8em;
   }
-  @include respond(desktop) {
+  @include respond(md) {
+    width: 340px;
+    height: 340px;
+    margin-left: 1em;
+  }
+    @include respond(lg) {
     width: 410px;
     height: 440px;
+    margin-left: 2em;
   }
 }
 
@@ -40,12 +48,12 @@
   height: 70px;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
 
-  @include respond(tablet) {
-    width: 200px;
+  @include respond(md) {
+    width: 250px;
     height: 160px;
   }
 
-  @include respond(desktop) {
+    @include respond(lg) {
     width: 340px;
     height: 200px;
   }
@@ -55,16 +63,17 @@
   width: 150px;
   font-size: 0.8rem;
   font-weight: bold;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   position: relative;
   left: 0.5em;
   top: -1em;
-  @include respond(tablet) {
+  @include respond(md) {
     width: 250px;
     font-size: 1.5rem;
     left: 0em;
+    top: -0.5em;
   }
-  @include respond(desktop) {
+    @include respond(lg) {
     width: 350px;
     font-size: 2rem;
     left: 0em;
@@ -80,14 +89,49 @@
   left: 0.5em;
   top: -1em;
 
-  @include respond(tablet) {
+  @include respond(md) {
     width: 250px;
     font-size: 1.5rem;
     left: 0em;
+    top: -0.5em;
   }
-  @include respond(desktop) {
+    @include respond(lg) {
     width: 350px;
     font-size: 2rem;
     left: 0em;
   }
+}
+
+.card-button{
+  width: 70px;
+  height: 20px;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  left: 3em;
+  top: 1em;
+  font-size: 0.7rem;
+  font-weight: bold;
+  @include respond(md) {
+    width: 150px;
+    height: 40px;
+    font-size: 1rem;
+    left: 4em;
+  }
+    @include respond(lg) {
+    width: 200px;
+    height: 50px;
+    font-size: 1.5rem;
+    left: 3em;
+  }
+
+}
+
+.card-button:hover{
+  background-color: var(--color-secondary);
+  transition: all 0.3s ease-in-out;
+  color: var(--color-text-primary);
 }

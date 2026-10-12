@@ -1,8 +1,11 @@
 $breakpoints: (
-  mobile: 480px,
-  tablet: 768px,
-  desktop: 1024px,
-  wide: 1440px
+        sm: 430px,
+        // móvil grande / landscape
+        md: 768px,
+        // md
+        lg: 1024px,
+        // lg
+        xl: 1440px // pantallas anchas
 );
 
 @mixin respond($breakpoint) {

@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CardsComponent } from '../../../shared/components/cards/cards.component';
 import { NavMenuComponent } from '../../../shared/components/nav-Menu/navMenu.component';
 
+
 interface Producto {
   title: string;
   price: number;
@@ -13,7 +14,7 @@ interface Producto {
   standalone: true,
   templateUrl: './menu.page.html',
   styleUrls: ['./menu.page.scss'],
-  imports: [CardsComponent],
+  imports: [CardsComponent,NavMenuComponent],
 })
 export class MenuPage {
   title = signal<string>('Menu');
