@@ -61,29 +61,29 @@
 
 .menu-cards{
   width: 100%;
-  padding: 5px;
-  padding-top: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   background-color: var(--color-text-primary);
   position: absolute;
-  top: 11em;
+  top: 17em;
   left: 0;
   display: grid;
   justify-content: center;
   align-items: center;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 15px;
 
   @include respond(tablet) {
     top: 15em;
     grid-template-columns: repeat(2, 1fr);
-    padding: 0px;
-    padding-top: 7em;
+    padding-top: 20px;
+  padding-bottom: 20px;
   }
 
   @include respond(desktop) {
     top: 20em;
     grid-template-columns: repeat(3, 1fr);
-    padding: 0px;
-    padding-top: 7em;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }
