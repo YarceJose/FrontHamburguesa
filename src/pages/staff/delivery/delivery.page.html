@@ -1,0 +1,44 @@
+<div class="shell">
+  <app-topbar />
+  <main class="content">
+    <header class="head">
+      <div>
+        <p class="eyebrow">Domicilios</p>
+        <h1 class="head__title">Entregas</h1>
+      </div>
+      <span class="live" [class.live--on]="board.connected()">
+        {{ board.connected() ? 'En vivo' : 'Reconectando…' }} · {{ inKitchen() }} en cocina
+      </span>
+    </header>
+
+    @if (board.error(); as message) { <p class="banner">{{ message }}</p> }
+
+    <div class="columns">
+      <section class="column" aria-labelledby="col-ready">
+        <h2 id="col-ready" class="column__title">Listos para recoger <span class="column__count">{{ ready().length }}</span></h2>
+        @for (order of ready(); track order.id) {
+          <app-order-ticket [order]="order" [minutes]="board.minutesSince(order.receivedAt)">
+            <button class="btn btn--primary big" type="button" [disabled]="board.busyId() === order.id"
+                    (click)="board.advance(order, 'picked-up')">Lo tengo</button>
+          </app-order-ticket>
+        } @empty {
+          <p class="column__empty">Nada listo todavía.</p>
+        }
+      </section>
+
+      <section class="column" aria-labelledby="col-way">
+        <h2 id="col-way" class="column__title">En camino <span class="column__count">{{ onTheWay().length }}</span></h2>
+        @for (order of onTheWay(); track order.id) {
+          <app-order-ticket [order]="order" [minutes]="board.minutesSince(order.receivedAt)">
+            <a class="btn btn--ghost" [href]="'tel:' + order.customerPhone">Llamar</a>
+            <button class="btn btn--dark big" type="button" [disabled]="board.busyId() === order.id"
+                    (click)="board.advance(order, 'delivered')">Entregado</button>
+          </app-order-ticket>
+        } @empty {
+          <p class="column__empty">No llevas pedidos.</p>
+        }
+      </section>
+    </div>
+  </main>
+  <app-live-notices [notices]="board.notices()" (dismiss)="board.dismiss($event)" />
+</div>

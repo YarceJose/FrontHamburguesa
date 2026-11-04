@@ -1,0 +1,133 @@
+@use 'abstracts' as *;
+
+.shell {
+  min-height: 100dvh;
+  background: linear-gradient(var(--color-background) 0 190px, var(--color-surface-muted) 190px);
+}
+
+.content {
+  display: grid;
+  gap: 16px;
+  max-width: 1040px;
+  margin: 12px auto 0;
+  padding: 0 16px 40px;
+
+  @include respond(lg) {
+    padding: 0 40px 48px;
+  }
+}
+
+.profile,
+.panel {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 22px;
+}
+
+.profile {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+
+  &__avatar {
+    flex: none;
+    width: 68px;
+    height: 68px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-navy-700), var(--color-background));
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--color-primary);
+  }
+
+  &__info {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--color-background);
+  }
+
+  &__email {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--color-success);
+  }
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgb(18 149 90 / 0.15);
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+
+  &--single {
+    max-width: 720px;
+  }
+}
+
+.panel {
+  &__title {
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--color-background);
+  }
+
+}
+
+.rows {
+  margin-top: 8px;
+
+  // Stacked on phones, label/value side by side from tablets up
+  &__item {
+    display: grid;
+    gap: 2px;
+    padding: 12px 0;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.85rem;
+
+    @include respond(md) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+    }
+
+    dt {
+      color: var(--color-text-muted);
+    }
+
+    dd {
+      font-family: var(--font-mono);
+      overflow-wrap: anywhere;
+
+      @include respond(md) {
+        text-align: right;
+      }
+    }
+  }
+}

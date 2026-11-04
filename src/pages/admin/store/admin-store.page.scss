@@ -1,0 +1,159 @@
+@use 'abstracts' as *;
+
+.shell {
+  min-height: 100dvh;
+  background: linear-gradient(var(--color-background) 0 210px, var(--color-surface-muted) 210px);
+}
+
+.content {
+  display: grid;
+  gap: 16px;
+  max-width: 960px;
+  margin: 4px auto 0;
+  padding: 0 16px 48px;
+}
+
+.head {
+  color: var(--color-white);
+
+  .eyebrow { color: var(--color-tertiary); }
+
+  &__title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 900; }
+
+  &__subtitle { font-size: 0.9rem; color: rgb(255 255 255 / 0.7); }
+}
+
+.panel {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+
+  &__title {
+    margin-top: 6px;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--color-background);
+  }
+}
+
+.row {
+  display: grid;
+  gap: 12px;
+
+  @include respond(md) {
+    grid-template-columns: 1fr 1fr;
+
+    &--3 { grid-template-columns: repeat(3, 1fr); }
+  }
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.day {
+  height: 36px;
+  min-width: 52px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-muted);
+  font-weight: 500;
+
+  &.is-on {
+    background: var(--color-background);
+    color: var(--color-tertiary);
+    font-weight: 700;
+  }
+}
+
+.list {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+
+  li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+  }
+}
+
+.is-off {
+  opacity: 0.5;
+}
+
+.add {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+
+  &.row--3 {
+    @include respond(md) { grid-template-columns: 1fr 1fr 1fr auto; }
+  }
+}
+
+.accounts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.account {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  text-align: center;
+  font-size: 0.85rem;
+
+  img,
+  &__noqr {
+    width: 140px;
+    aspect-ratio: 1;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+  }
+
+  &__noqr {
+    display: grid;
+    place-items: center;
+    color: var(--color-text-muted);
+  }
+}
+
+.file {
+  position: relative;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.muted {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}

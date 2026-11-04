@@ -1,0 +1,366 @@
+@use 'abstracts' as *;
+
+:host {
+  display: block;
+  min-height: 100dvh;
+  overflow-x: clip; // decorative circles must never create horizontal scroll (clip keeps sticky working)
+  background: radial-gradient(120% 70% at 85% 0%, #003a7a 0%, var(--color-background) 50%, var(--color-navy-900) 100%);
+  --gutter: clamp(16px, 5vw, 64px);
+}
+
+/* ---------- Top navigation ---------- */
+.nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px var(--gutter);
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: 900;
+
+    img {
+      width: 44px;
+      height: 30px;
+      object-fit: contain;
+    }
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__admin {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.08);
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    backdrop-filter: blur(6px);
+    transition: background 0.2s, border-color 0.2s;
+
+    &:hover,
+    &:focus-visible {
+      background: rgb(255 255 255 / 0.16);
+      border-color: rgb(255 255 255 / 0.5);
+      outline: none;
+    }
+
+    span {
+      display: none;
+
+      @include respond(sm) {
+        display: inline;
+      }
+    }
+  }
+}
+
+/* ---------- Hero (Figma Frame 1) ---------- */
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 8px var(--gutter) 56px;
+  text-align: center;
+  color: var(--color-white);
+
+  @include respond(md) {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: start;
+    text-align: left;
+    padding-bottom: 88px;
+  }
+
+  &__shape {
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    // Slow, continuous orbit: a small circular path at constant speed, no back-and-forth
+    animation: orbit 80s linear infinite;
+    will-change: transform;
+
+    // Users who ask the OS for less motion get still circles
+    @media (prefers-reduced-motion: reduce) {
+      animation: none !important;
+    }
+
+    &--yellow {
+      width: clamp(160px, 28vw, 380px);
+      aspect-ratio: 1;
+      left: calc(clamp(160px, 28vw, 380px) * -0.62);
+      top: 58%;
+      background: radial-gradient(circle at 60% 40%, #ffd277, var(--color-tertiary) 60%);
+    }
+
+    &--red {
+      width: clamp(170px, 30vw, 440px);
+      aspect-ratio: 1;
+      right: calc(clamp(170px, 30vw, 440px) / -3);
+      top: -40%;
+      background: radial-gradient(circle at 35% 35%, #e3231b, var(--color-accent) 65%);
+      animation-duration: 100s;
+      animation-direction: reverse;
+    }
+  }
+
+  &__grid {
+    position: absolute;
+    inset: -80px 0 0;
+    z-index: -1;
+    background-image: linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(ellipse at 50% 40%, black 25%, transparent 75%);
+  }
+
+  &__content {
+    display: grid;
+    gap: 12px;
+    justify-items: inherit;
+    max-width: 34rem;
+  }
+
+  &__title {
+    font-size: clamp(1.7rem, 5.5vw, 3.6rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+
+    span {
+      display: block;
+      font-size: 1.5em;
+      color: var(--color-accent);
+      text-shadow: 0 8px 30px rgb(192 7 7 / 0.45);
+    }
+  }
+
+  &__description {
+    font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+    line-height: 1.5;
+    color: rgb(255 255 255 / 0.82);
+  }
+
+  &__cta {
+    margin-top: 6px;
+    text-decoration: none;
+  }
+
+  &__image {
+    width: min(86vw, 560px);
+    justify-self: center;
+    filter: drop-shadow(0 24px 34px rgb(0 0 0 / 0.5));
+  }
+}
+
+/* ---------- Menu (Figma Frame 4) ---------- */
+.menu {
+  position: relative;
+  z-index: 1;
+  margin-top: -32px;
+  padding: 28px var(--gutter) 120px;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--color-surface-muted);
+  min-height: 60vh;
+
+  &__head {
+    display: grid;
+    gap: 2px;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 900;
+    color: var(--color-background);
+  }
+
+  &__subtitle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+}
+
+.eta {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-secondary);
+}
+
+.closed {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: #fff4e0;
+  color: #7a4b00;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.chips {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+  margin: 0 calc(var(--gutter) * -1) 20px;
+  padding: 10px var(--gutter);
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: rgb(243 245 249 / 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.chip {
+  flex: none;
+  height: 36px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-field);
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  &--active,
+  &--active:hover {
+    background: var(--color-background);
+    color: var(--color-tertiary);
+    font-weight: 700;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+  gap: clamp(12px, 2vw, 24px);
+
+  @include respond(md) {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+}
+
+.empty {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Order bar ---------- */
+.order {
+  position: fixed;
+  z-index: 3;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(calc(100% - 32px), 460px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-background);
+  color: var(--color-white);
+  box-shadow: 0 18px 40px -12px rgb(0 10 30 / 0.6);
+  --tx: -50%; // keeps the centering during the rise animation
+  animation: rise 0.25s ease;
+
+  &__count {
+    min-width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-primary);
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+
+  &__text {
+    flex: 1;
+    font-size: 0.88rem;
+
+    strong {
+      font-family: var(--font-mono);
+      color: var(--color-tertiary);
+    }
+  }
+
+  &__go {
+    height: 34px;
+    padding: 0 16px;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-weight: 900;
+    font-size: 0.85rem;
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &__clear {
+    height: 34px;
+    padding: 0 14px;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.12);
+    color: inherit;
+    font-size: 0.8rem;
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(12px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translateX(12px) rotate(-360deg);
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translate(var(--tx, 0), 24px);
+    opacity: 0;
+  }
+}

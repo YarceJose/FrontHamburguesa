@@ -1,0 +1,92 @@
+<header class="panel-head">
+  <p class="eyebrow">Personal</p>
+  <h2 class="panel-head__title">Nuevo usuario</h2>
+  <p class="panel-head__subtitle">Crea un acceso para cocina o domicilios.</p>
+</header>
+
+<form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <fieldset class="roles">
+    <legend class="field__label">Rol</legend>
+    @for (role of staffRoles; track role) {
+      <label class="roles__option" [class.is-active]="form.controls.role.value === role">
+        <input type="radio" formControlName="role" [value]="role" />
+        <span class="roles__dot" [attr.data-role]="role" aria-hidden="true"></span>
+        {{ roleLabels[role] }}
+      </label>
+    }
+  </fieldset>
+
+  <div class="field">
+    <label class="field__label" for="fullName">Nombre completo</label>
+    <input id="fullName" class="field__input" formControlName="fullName" autocomplete="off"
+           [attr.aria-invalid]="invalid('fullName')" />
+    @if (invalid('fullName')) {
+      <span class="field__error">Escribe el nombre (mínimo 2 caracteres).</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="username">Usuario para ingresar</label>
+    <input id="username" class="field__input field__input--mono" formControlName="username" autocomplete="off"
+           autocapitalize="none" spellcheck="false" placeholder="ej.: cocina2" [attr.aria-invalid]="invalid('username')" />
+    @if (invalid('username')) {
+      <span class="field__error">3 a 30 letras minúsculas, números, punto, guion o guion bajo.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="email">Correo electrónico <span class="optional">(opcional)</span></label>
+    <input id="email" class="field__input" type="email" formControlName="email" autocomplete="off"
+           [attr.aria-invalid]="invalid('email')" />
+    @if (invalid('email')) {
+      <span class="field__error">Ese correo no es válido.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="phone">Teléfono <span class="optional">(opcional)</span></label>
+    <input id="phone" class="field__input" type="tel" formControlName="phone" autocomplete="off"
+           placeholder="300 123 4567" [attr.aria-invalid]="invalid('phone')" />
+    @if (invalid('phone')) {
+      <span class="field__error">Solo números, espacios, + o -.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="password">Contraseña inicial</label>
+    <div class="field__control">
+      <input id="password" class="field__input field__input--mono" formControlName="password" autocomplete="new-password"
+             [type]="showPassword() ? 'text' : 'password'" [attr.aria-invalid]="invalid('password')" />
+      <button type="button" class="field__action" (click)="showPassword.set(!showPassword())"
+              [attr.aria-pressed]="showPassword()">
+        {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+      </button>
+    </div>
+    <div class="password-tools">
+      <button type="button" (click)="generate()">Generar segura</button>
+      @if (form.controls.password.value) {
+        <button type="button" (click)="copy()">{{ copied() ? 'Copiada ✓' : 'Copiar' }}</button>
+      }
+    </div>
+    @if (invalid('password')) {
+      <span class="field__error">Mínimo 8 caracteres.</span>
+    }
+  </div>
+
+  <div aria-live="polite">
+    @if (error(); as message) {
+      <p class="alert alert--error">{{ message }}</p>
+    }
+  </div>
+
+  <div class="form__actions">
+    <button class="btn btn--ghost" type="button" (click)="cancel.emit()">Cancelar</button>
+    <button class="btn btn--primary" type="submit" [disabled]="saving()">
+      @if (saving()) {
+        <span class="spinner" aria-hidden="true"></span> Creando…
+      } @else {
+        Crear usuario
+      }
+    </button>
+  </div>
+</form>

@@ -1,0 +1,112 @@
+:host {
+  display: block;
+}
+
+.ticket {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  border-left: 4px solid var(--color-background);
+  animation: enter 0.3s ease;
+
+  &--late {
+    border-left-color: var(--color-secondary);
+    background: #fff8ef;
+  }
+
+  &--escalated {
+    border-left-color: var(--color-danger);
+    background: #fdf1ef;
+  }
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__code {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    color: var(--color-background);
+  }
+
+  &__time {
+    padding: 2px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-muted);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  &__sector {
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  &__customer {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+
+    a {
+      color: inherit;
+      font-family: var(--font-mono);
+    }
+  }
+
+  &__items {
+    list-style: none;
+    display: grid;
+    gap: 2px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-muted);
+    font-size: 0.9rem;
+  }
+
+  &__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 0.8rem;
+  }
+
+  &__total {
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+
+  &__pay[data-method='Transfer'] {
+    color: #0c6b40;
+  }
+
+  &__alert {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-danger);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

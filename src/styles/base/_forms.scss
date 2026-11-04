@@ -1,0 +1,244 @@
+// Shared form controls and buttons. Figma look (white fields with a soft shadow)
+// at a comfortable 44px touch height.
+
+.field {
+  display: grid;
+  gap: 6px;
+
+  &__label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  &__control {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    // room for the inline "Mostrar/Ocultar" action
+    .field__input {
+      padding-right: 84px;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-field);
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    transition: box-shadow 0.2s;
+
+    &::placeholder {
+      color: #9aa3b5;
+    }
+
+    &:hover {
+      box-shadow: 0 0 0 1px rgb(0 36 85 / 0.18), 0 1px 4px rgb(0 0 0 / 0.08);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 1.5px var(--color-primary), var(--focus-ring);
+    }
+
+    &--mono {
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+
+    &[aria-invalid='true'] {
+      box-shadow: 0 0 0 1.5px var(--color-danger);
+    }
+  }
+
+  &__action {
+    position: absolute;
+    right: 6px;
+    border: none;
+    background: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--color-primary);
+      background: rgb(231 63 30 / 0.08);
+      outline: none;
+    }
+  }
+
+  &__error {
+    font-size: 0.75rem;
+    color: var(--color-danger);
+  }
+}
+
+select.field__input {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #5b6478 50%),
+    linear-gradient(135deg, #5b6478 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 900;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s, opacity 0.2s;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--primary {
+    background: linear-gradient(180deg, #f04b29, var(--color-primary));
+    color: var(--color-white);
+    box-shadow: var(--shadow-primary);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(180deg, #e6411f, #d03516);
+    }
+  }
+
+  &--dark {
+    background: linear-gradient(180deg, var(--color-navy-700), var(--color-background));
+    color: var(--color-white);
+    box-shadow: 0 10px 22px -12px rgb(0 36 85 / 0.8);
+
+    &:hover:not(:disabled) {
+      background: var(--color-navy-700);
+    }
+  }
+
+  &--ghost {
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-field);
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 0 0 1px rgb(0 36 85 / 0.3), 0 1px 4px rgb(0 0 0 / 0.08);
+    }
+  }
+
+  &--sm {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 0.8rem;
+  }
+
+  &--block {
+    width: 100%;
+  }
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(255 255 255 / 0.4);
+  border-top-color: var(--color-white);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.alert {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  line-height: 1.4;
+
+  &--error {
+    background: #fdecea;
+    color: #8f1206;
+  }
+
+  &--info {
+    background: #eaf1fb;
+    color: #0b3b7a;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Header used inside side panels
+.panel-head {
+  display: grid;
+  gap: 4px;
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-background);
+  }
+
+  &__subtitle {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+}
+
+// Inline password helper: generate + copy
+.password-tools {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+
+  button {
+    height: 30px;
+    padding: 0 12px;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-muted);
+    color: var(--color-background);
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    &:hover,
+    &:focus-visible {
+      background: rgb(0 36 85 / 0.1);
+      outline: none;
+    }
+  }
+}

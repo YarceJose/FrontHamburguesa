@@ -1,0 +1,116 @@
+<header class="panel-head">
+  <p class="eyebrow">Menú</p>
+  <h2 class="panel-head__title">{{ isNew() ? 'Nuevo producto' : 'Editar producto' }}</h2>
+  <p class="panel-head__subtitle">
+    {{ isNew() ? 'Aparecerá en el menú en cuanto lo guardes.' : 'Los pedidos anteriores conservan el precio con el que se vendieron.' }}
+  </p>
+</header>
+
+<form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <!-- Picture -->
+  <div class="photo">
+    <div class="photo__frame" [class.is-empty]="!preview()">
+      @if (preview(); as src) {
+        <img [src]="src" alt="Vista previa del producto" />
+      } @else {
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+          <path fill="currentColor" d="M19 5v14H5V5h14Zm0-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm-4.9 8.8-3 3.9L9 13.1 6 17h12l-3.9-5.2Z" />
+        </svg>
+        <span>Sin foto</span>
+      }
+    </div>
+    <div class="photo__actions">
+      <label class="btn btn--sm btn--dark file">
+        <input type="file" accept="image/png,image/jpeg,image/webp" (change)="pickFile($event)" />
+        {{ preview() ? 'Cambiar foto' : 'Subir foto' }}
+      </label>
+      @if (file() || hasUploaded()) {
+        <button class="btn btn--sm btn--ghost" type="button" (click)="clearImage()">Quitar foto</button>
+      }
+      <span class="photo__hint">JPG, PNG o WEBP · máx. 5 MB</span>
+    </div>
+    @if (fileError(); as message) {
+      <span class="field__error">{{ message }}</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="name">Nombre</label>
+    <input id="name" class="field__input" formControlName="name" autocomplete="off"
+           placeholder="ej.: Hamburguesa doble" [attr.aria-invalid]="invalid('name')" />
+    @if (invalid('name')) {
+      <span class="field__error">Escribe el nombre (mínimo 2 caracteres).</span>
+    }
+  </div>
+
+  <div class="grid-2">
+    <div class="field">
+      <label class="field__label" for="price">Precio (COP)</label>
+      <div class="money">
+        <span aria-hidden="true">$</span>
+        <input id="price" class="field__input field__input--mono" type="number" inputmode="numeric" min="1" step="100"
+               formControlName="price" [attr.aria-invalid]="invalid('price')" />
+      </div>
+      @if (invalid('price')) {
+        <span class="field__error">Debe ser mayor que cero.</span>
+      }
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="category">Categoría</label>
+      <input id="category" class="field__input" formControlName="category" list="product-categories" autocomplete="off"
+             placeholder="ej.: Hamburguesas" />
+      <datalist id="product-categories">
+        @for (c of categories(); track c) {
+          <option [value]="categoryLabel(c)"></option>
+        }
+      </datalist>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="description">
+      Descripción <span class="optional">(opcional)</span>
+    </label>
+    <textarea id="description" class="field__input textarea" rows="3" formControlName="description"
+              placeholder="Qué trae, con qué se acompaña…" maxlength="300"></textarea>
+    <span class="counter">{{ form.controls.description.value.length }}/300</span>
+  </div>
+
+  @if (!file() && !hasUploaded()) {
+    <div class="field">
+      <label class="field__label" for="imageUrl">O enlace a una foto <span class="optional">(opcional)</span></label>
+      <input id="imageUrl" class="field__input" type="url" formControlName="imageUrl" autocomplete="off"
+             placeholder="https://…" [attr.aria-invalid]="invalid('imageUrl')" />
+      @if (invalid('imageUrl')) {
+        <span class="field__error">Pega un enlace que empiece por http:// o https://</span>
+      }
+    </div>
+  }
+
+  <label class="switch">
+    <input type="checkbox" formControlName="isActive" />
+    <span class="switch__track" aria-hidden="true"></span>
+    <span class="switch__text">
+      <strong>{{ form.controls.isActive.value ? 'Visible en el menú' : 'Oculto del menú' }}</strong>
+      <small>Ocúltalo cuando se agote; no se borra de los pedidos anteriores.</small>
+    </span>
+  </label>
+
+  <div aria-live="polite">
+    @if (error(); as message) {
+      <p class="alert alert--error">{{ message }}</p>
+    }
+  </div>
+
+  <div class="form__actions">
+    <button class="btn btn--ghost" type="button" (click)="cancel.emit()">Cancelar</button>
+    <button class="btn btn--primary" type="submit" [disabled]="saving()">
+      @if (saving()) {
+        <span class="spinner" aria-hidden="true"></span> Guardando…
+      } @else {
+        {{ isNew() ? 'Crear producto' : 'Guardar cambios' }}
+      }
+    </button>
+  </div>
+</form>

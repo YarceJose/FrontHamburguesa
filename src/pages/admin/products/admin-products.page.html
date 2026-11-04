@@ -1,0 +1,144 @@
+<div class="shell">
+  <app-topbar />
+
+  <main class="content">
+    <header class="head">
+      <div>
+        <p class="eyebrow">Administración</p>
+        <h1 class="head__title">Productos</h1>
+        <p class="head__subtitle">Lo que ven tus clientes en el menú: nombre, precio, foto y categoría.</p>
+      </div>
+      <button class="btn btn--primary" type="button" (click)="openCreate()">
+        <span aria-hidden="true">+</span> Nuevo producto
+      </button>
+    </header>
+
+    <section class="stats" aria-label="Resumen del menú">
+      <div class="stat stat--on">
+        <span class="stat__value">{{ counts().active }}</span>
+        <span class="stat__label">En el menú</span>
+      </div>
+      <div class="stat stat--off">
+        <span class="stat__value">{{ counts().hidden }}</span>
+        <span class="stat__label">Ocultos</span>
+      </div>
+      <div class="stat stat--cat">
+        <span class="stat__value">{{ counts().categories }}</span>
+        <span class="stat__label">Categorías</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">{{ counts().all }}</span>
+        <span class="stat__label">Total</span>
+      </div>
+    </section>
+
+    <section class="board" aria-labelledby="list-title">
+      <h2 id="list-title" class="visually-hidden">Lista de productos</h2>
+
+      <div class="toolbar">
+        <div class="chips" role="group" aria-label="Filtrar por categoría">
+          <button class="chip" type="button" [class.chip--active]="category() === null"
+                  [attr.aria-pressed]="category() === null" (click)="category.set(null)">
+            Todas
+          </button>
+          @for (c of categories(); track c) {
+            <button class="chip" type="button" [class.chip--active]="category() === c"
+                    [attr.aria-pressed]="category() === c" (click)="category.set(c)">
+              {{ categoryLabel(c) }}
+            </button>
+          }
+        </div>
+
+        <div class="toolbar__right">
+          <label class="search">
+            <span class="visually-hidden">Buscar</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path fill="currentColor" d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
+            </svg>
+            <input type="search" placeholder="Nombre o descripción" [value]="search()"
+                   (input)="search.set($any($event.target).value)" />
+          </label>
+
+          <div class="segmented" role="group" aria-label="Mostrar">
+            <button type="button" [class.is-active]="visibility() === 'active'" (click)="visibility.set('active')">
+              En el menú
+            </button>
+            <button type="button" [class.is-active]="visibility() === 'hidden'" (click)="visibility.set('hidden')">
+              Ocultos <span class="segmented__count">{{ counts().hidden }}</span>
+            </button>
+            <button type="button" [class.is-active]="visibility() === 'all'" (click)="visibility.set('all')">
+              Todos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton" aria-label="Cargando productos">
+          <span></span><span></span><span></span>
+        </div>
+      } @else if (loadError(); as message) {
+        <div class="state">
+          <p>{{ message }}</p>
+          <button class="btn btn--sm btn--dark" type="button" (click)="load()">Reintentar</button>
+        </div>
+      } @else if (visible().length === 0) {
+        <div class="state">
+          @if (counts().all === 0) {
+            <p><strong>Tu menú está vacío.</strong> Crea el primer producto para que los clientes puedan pedir.</p>
+            <button class="btn btn--sm btn--primary" type="button" (click)="openCreate()">+ Nuevo producto</button>
+          } @else {
+            <p>No hay productos con esos filtros.</p>
+          }
+        </div>
+      } @else {
+        <ul class="grid">
+          @for (p of visible(); track p.id) {
+            <li class="item" [class.item--off]="!p.isActive">
+              <button class="item__media" type="button" (click)="openEdit(p)" [attr.aria-label]="'Editar ' + p.name">
+                <img [src]="image(p)" [alt]="" loading="lazy" />
+                @if (!p.isActive) {
+                  <span class="item__flag">Oculto</span>
+                }
+              </button>
+              <div class="item__body">
+                <div class="item__top">
+                  <span class="tag">{{ categoryLabel(p.category) }}</span>
+                  <span class="item__price">{{ p.price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span>
+                </div>
+                <h3 class="item__name">{{ p.name }}</h3>
+                @if (p.description) {
+                  <p class="item__description">{{ p.description }}</p>
+                }
+                <div class="item__actions">
+                  <button class="btn btn--sm btn--ghost" type="button" [disabled]="busyId() === p.id"
+                          (click)="toggleActive(p)">
+                    {{ p.isActive ? 'Ocultar' : 'Mostrar' }}
+                  </button>
+                  <button class="btn btn--sm btn--dark" type="button" (click)="openEdit(p)">Editar</button>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </main>
+
+  <div class="toast-zone" aria-live="polite">
+    @if (toast(); as t) {
+      <p class="toast" [class.toast--error]="t.kind === 'error'">{{ t.text }}</p>
+    }
+  </div>
+</div>
+
+<app-side-panel [open]="panel() !== null" [label]="panel()?.kind === 'edit' ? 'Editar producto' : 'Nuevo producto'"
+                (closed)="closePanel()">
+  @if (panel(); as p) {
+    @if (p.kind === 'edit') {
+      <app-product-form [product]="p.product" [categories]="categories()" (saved)="onSaved($event)" (cancel)="closePanel()" />
+    } @else {
+      <app-product-form [categories]="categories()" (saved)="onSaved($event)" (cancel)="closePanel()" />
+    }
+  }
+</app-side-panel>

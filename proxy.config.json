@@ -3,9 +3,12 @@
     "target": "http://localhost:8080/",
     "secure": false,
     "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/hubs": {
+    "target": "http://localhost:8080/",
+    "secure": false,
     "changeOrigin": true,
-    "headers": {
-      "Connection": "keep-alive"
-    }
+    "ws": true
   }
 }

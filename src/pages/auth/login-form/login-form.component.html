@@ -1,0 +1,28 @@
+<form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label class="field__label" for="login-username">Usuario</label>
+    <input id="login-username" class="field__input" formControlName="username" autocomplete="username"
+           autocapitalize="none" spellcheck="false" placeholder="ej.: cocina" [attr.aria-invalid]="invalid('username')" />
+    @if (invalid('username')) { <span class="field__error">Escribe tu usuario.</span> }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="login-password">Contraseña</label>
+    <div class="field__control">
+      <input id="login-password" class="field__input" [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+             autocomplete="current-password" [attr.aria-invalid]="invalid('password')" />
+      <button type="button" class="field__action" (click)="showPassword.set(!showPassword())" [attr.aria-pressed]="showPassword()">
+        {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+      </button>
+    </div>
+    @if (invalid('password')) { <span class="field__error">Escribe tu contraseña.</span> }
+  </div>
+
+  <div aria-live="polite">
+    @if (error(); as message) { <p class="alert alert--error">{{ message }}</p> }
+  </div>
+
+  <button class="btn btn--primary btn--block" type="submit" [disabled]="loading()">
+    @if (loading()) { <span class="spinner" aria-hidden="true"></span> Ingresando… } @else { Ingresar }
+  </button>
+</form>

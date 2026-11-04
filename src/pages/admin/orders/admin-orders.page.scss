@@ -1,0 +1,107 @@
+.day {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  // Solid colors: readable on the navy band (desktop) and on the light page (phones)
+  &__state {
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--color-navy-700);
+    color: var(--color-white);
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    &--open {
+      background: var(--color-success);
+    }
+  }
+
+  &__ask {
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background: #fdecea;
+    color: #8f1206;
+    font-size: 0.8rem;
+  }
+}
+
+.column--review {
+  background: rgb(249 182 55 / 0.14);
+}
+
+.column__sub {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.state {
+  align-self: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: rgb(0 36 85 / 0.08);
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  &[data-status='Delivered'] { background: rgb(18 149 90 / 0.12); color: #0c6b40; }
+  &[data-status='Cancelled'] { background: #fdecea; color: #8f1206; }
+}
+
+.history {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+
+  ul {
+    list-style: none;
+    display: grid;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 90px 1fr auto auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.85rem;
+
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr auto;
+    }
+  }
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.muted {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.receipt {
+  display: grid;
+  gap: 16px;
+
+  &__img {
+    width: 100%;
+    max-height: 55vh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-muted);
+  }
+
+  &__actions {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 10px;
+  }
+}

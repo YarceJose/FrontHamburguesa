@@ -1,0 +1,85 @@
+<div class="page">
+  <header class="nav">
+    <a class="nav__brand" routerLink="/"><img [src]="brand.logo" alt="" /> <span>{{ brand.name }}</span></a>
+  </header>
+
+  <main class="content">
+    @if (error(); as message) {
+      <section class="card"><p class="alert alert--error">{{ message }}</p><a class="btn btn--ghost" routerLink="/">Volver al menú</a></section>
+    } @else if (order(); as o) {
+      <section class="card head">
+        <p class="eyebrow">Pedido</p>
+        <h1 class="head__code">{{ o.code }}</h1>
+        <p class="head__status" [attr.data-status]="o.status">{{ labels[o.status] }}</p>
+        <p class="head__meta">Hola {{ o.customerFirstName }} · {{ o.sectorName }}</p>
+        @if (o.status !== 'Cancelled' && o.status !== 'Delivered') {
+          <p class="head__eta">Tiempo estimado: <strong>{{ o.estimatedMinutes }} min</strong> desde que se confirma.</p>
+        }
+        @if (o.status === 'Cancelled') {
+          <p class="alert alert--error">Este pedido fue cancelado. Si tienes dudas, escríbenos.</p>
+        }
+      </section>
+
+      @if (o.status === 'AwaitingPayment' || o.status === 'PaymentReview') {
+        <section class="card pay">
+          @if (o.status === 'AwaitingPayment') {
+            <h2 class="card__title">Paga por transferencia</h2>
+            @if (o.paymentRejectReason; as reason) {
+              <p class="alert alert--error">Tu comprobante no fue aprobado: {{ reason }}. Sube uno nuevo.</p>
+            }
+            <ol class="steps">
+              <li>Transfiere <strong class="mono">{{ o.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong> a una de estas cuentas.</li>
+              <li>En la descripción escribe el código <strong class="mono">{{ o.code }}</strong>.</li>
+              <li>Sube aquí la foto o el PDF del comprobante.</li>
+            </ol>
+
+            <div class="accounts">
+              @for (account of accounts(); track account.id) {
+                <article class="account">
+                  @if (account.hasQr) { <img class="account__qr" [src]="qrUrl(account)" [alt]="'QR de ' + account.provider" /> }
+                  <p class="account__provider">{{ account.provider }}</p>
+                  <p class="account__holder">{{ account.holderName }}</p>
+                  <button class="account__ref" type="button" (click)="copy(account.accountReference)">
+                    {{ account.accountReference }} <span>{{ copied() === account.accountReference ? 'Copiado ✓' : 'Copiar' }}</span>
+                  </button>
+                </article>
+              }
+            </div>
+
+            <label class="btn btn--primary btn--block upload" [class.is-busy]="uploading()">
+              <input type="file" accept="image/jpeg,image/png,image/webp,application/pdf" (change)="upload($event)" [disabled]="uploading()" />
+              @if (uploading()) { <span class="spinner" aria-hidden="true"></span> Subiendo… } @else { Subir comprobante }
+            </label>
+            @if (uploadError(); as message) { <p class="alert alert--error">{{ message }}</p> }
+          } @else {
+            <h2 class="card__title">Estamos revisando tu pago</h2>
+            <p class="muted">Apenas confirmemos la transferencia, tu pedido pasa a cocina. Esta página se actualiza sola.</p>
+          }
+        </section>
+      } @else if (o.status !== 'Cancelled') {
+        <section class="card">
+          <ol class="timeline">
+            @for (step of steps; track step.status; let i = $index) {
+              <li class="timeline__step" [class.is-done]="i <= stepIndex()" [class.is-current]="i === stepIndex()">
+                <span class="timeline__dot" aria-hidden="true"></span> {{ step.label }}
+              </li>
+            }
+          </ol>
+        </section>
+      }
+
+      <section class="card">
+        <h2 class="card__title">Detalle</h2>
+        <ul class="items">
+          @for (item of o.items; track item.productId) {
+            <li><span>{{ item.quantity }} × {{ item.productName }}</span><span class="mono">{{ item.subtotal | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span></li>
+          }
+          <li class="items__total"><span>Total · {{ o.paymentMethod === 'Cash' ? 'efectivo' : 'transferencia' }}</span><span class="mono">{{ o.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span></li>
+        </ul>
+        <p class="muted">Pedido hecho el {{ o.createdAt | date: 'd MMM, h:mm a' }}</p>
+      </section>
+    } @else {
+      <section class="card"><p class="muted">Buscando tu pedido…</p></section>
+    }
+  </main>
+</div>

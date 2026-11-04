@@ -1,0 +1,91 @@
+<div class="shell">
+  <app-topbar />
+  <main class="content">
+    <header class="head">
+      <p class="eyebrow">Administración</p>
+      <h1 class="head__title">Tienda</h1>
+      <p class="head__subtitle">Horario, tiempos, alertas, sectores de entrega y cuentas para transferencias.</p>
+    </header>
+
+    <div aria-live="polite">
+      @if (message(); as m) { <p class="alert" [class.alert--error]="m.kind === 'error'" [class.alert--info]="m.kind === 'ok'">{{ m.text }}</p> }
+    </div>
+
+    <form class="panel" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <h2 class="panel__title">Horario (hora Colombia)</h2>
+      <label class="switch"><input type="checkbox" formControlName="isOpen" /> Tienda abierta (al cerrar la jornada se apaga sola)</label>
+      <div class="row">
+        <div class="field"><label class="field__label" for="opensAt">Abre</label><input id="opensAt" class="field__input" type="time" formControlName="opensAt" /></div>
+        <div class="field"><label class="field__label" for="closesAt">Cierra</label><input id="closesAt" class="field__input" type="time" formControlName="closesAt" /></div>
+      </div>
+      <div class="days" role="group" aria-label="Días que abre">
+        @for (day of days; track day.value) {
+          <button type="button" class="day" [class.is-on]="hasDay(day.value)" [attr.aria-pressed]="hasDay(day.value)" (click)="toggleDay(day.value)">{{ day.short }}</button>
+        }
+      </div>
+
+      <h2 class="panel__title">Tiempos y capacidad</h2>
+      <div class="row row--3">
+        <div class="field"><label class="field__label" for="base">Tiempo base (min)</label><input id="base" class="field__input" type="number" formControlName="basePrepMinutes" /></div>
+        <div class="field"><label class="field__label" for="before">Desde cuántos pedidos sube</label><input id="before" class="field__input" type="number" formControlName="ordersBeforeDelay" /></div>
+        <div class="field"><label class="field__label" for="extra">Minutos extra por pedido</label><input id="extra" class="field__input" type="number" formControlName="extraMinutesPerOrder" /></div>
+      </div>
+      <div class="field"><label class="field__label" for="max">Dejar de recibir pedidos con (0 = sin límite)</label><input id="max" class="field__input" type="number" formControlName="maxActiveOrders" /></div>
+
+      <h2 class="panel__title">Alertas</h2>
+      <div class="row row--3">
+        <div class="field"><label class="field__label" for="alert">Alerta a cocina y domicilios (min)</label><input id="alert" class="field__input" type="number" formControlName="alertAfterMinutes" /></div>
+        <div class="field"><label class="field__label" for="escalate">Aviso al admin, minutos después</label><input id="escalate" class="field__input" type="number" formControlName="escalateAfterMinutes" /></div>
+        <div class="field"><label class="field__label" for="timeout">Cancelar transferencias sin pago (min)</label><input id="timeout" class="field__input" type="number" formControlName="paymentTimeoutMinutes" /></div>
+      </div>
+
+      <button class="btn btn--primary" type="submit" [disabled]="saving()">Guardar configuración</button>
+    </form>
+
+    <section class="panel" aria-labelledby="sectors-title">
+      <h2 id="sectors-title" class="panel__title">Sectores de entrega</h2>
+      <p class="muted">Veredas, barrios o sectores que el cliente elige. También puede escribir "Otro".</p>
+      <ul class="list">
+        @for (sector of sectors(); track sector.id) {
+          <li [class.is-off]="!sector.isActive">
+            <input class="field__input" [value]="sector.name" (change)="renameSector(sector, $any($event.target).value)" aria-label="Nombre del sector" />
+            <button class="btn btn--sm btn--ghost" type="button" (click)="toggleSector(sector)">{{ sector.isActive ? 'Ocultar' : 'Mostrar' }}</button>
+          </li>
+        }
+      </ul>
+      <div class="add">
+        <input class="field__input" [(ngModel)]="newSector" placeholder="Nuevo sector, ej.: Vereda La Palma" aria-label="Nuevo sector" (keydown.enter)="addSector()" />
+        <button class="btn btn--dark" type="button" (click)="addSector()">Agregar</button>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="accounts-title">
+      <h2 id="accounts-title" class="panel__title">Cuentas para transferencias</h2>
+      <p class="muted">Sube el QR que tu app de Nequi, Bancolombia o Bre-B genera para recibir pagos. El cliente lo verá con el total.</p>
+      <div class="accounts">
+        @for (account of accounts(); track account.id) {
+          <article class="account" [class.is-off]="!account.isActive">
+            @if (account.hasQr) { <img [src]="qrUrl(account)" [alt]="'QR ' + account.provider" /> } @else { <div class="account__noqr">Sin QR</div> }
+            <strong>{{ account.provider }}</strong>
+            <span>{{ account.holderName }}</span>
+            <span class="mono">{{ account.accountReference }}</span>
+            <label class="btn btn--sm btn--ghost file">
+              <input type="file" accept="image/png,image/jpeg,image/webp" (change)="uploadQr(account, $event)" />
+              {{ account.hasQr ? 'Cambiar QR' : 'Subir QR' }}
+            </label>
+            <button class="btn btn--sm btn--ghost" type="button" (click)="toggleAccount(account)">{{ account.isActive ? 'Desactivar' : 'Activar' }}</button>
+          </article>
+        } @empty { <p class="muted">Sin cuentas: los clientes solo podrán pagar en efectivo.</p> }
+      </div>
+
+      <form class="row row--3 add" [formGroup]="accountForm" (ngSubmit)="addAccount()" novalidate>
+        <select class="field__input" formControlName="provider" aria-label="Banco">
+          <option>Nequi</option><option>Bancolombia</option><option>Bre-B</option><option>Daviplata</option><option>Otro</option>
+        </select>
+        <input class="field__input" formControlName="holderName" placeholder="Titular" aria-label="Titular" />
+        <input class="field__input" formControlName="accountReference" placeholder="Número, cuenta o llave" aria-label="Número o llave" />
+        <button class="btn btn--dark" type="submit">Agregar cuenta</button>
+      </form>
+    </section>
+  </main>
+</div>
