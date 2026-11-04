@@ -99,7 +99,7 @@
     z-index: -1;
     border-radius: 50%;
     // Slow, continuous orbit: a small circular path at constant speed, no back-and-forth
-    animation: orbit 2s linear infinite;
+    animation: orbit 80s linear infinite;
     will-change: transform;
 
     &--yellow {
@@ -116,7 +116,7 @@
       right: calc(clamp(170px, 30vw, 440px) / -3);
       top: -40%;
       background: radial-gradient(circle at 35% 35%, #e3231b, var(--color-accent) 65%);
-      animation-duration: 56s;
+      animation-duration: 100s;
       animation-direction: reverse;
     }
   }
@@ -345,11 +345,11 @@
 
 @keyframes orbit {
   from {
-    transform: rotate(0deg) translateX(18px) rotate(0deg);
+    transform: rotate(0deg) translateX(12px) rotate(0deg);
   }
 
   to {
-    transform: rotate(360deg) translateX(18px) rotate(-360deg);
+    transform: rotate(360deg) translateX(12px) rotate(-360deg);
   }
 }
 

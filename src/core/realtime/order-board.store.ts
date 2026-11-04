@@ -129,6 +129,8 @@ export class OrderBoardStore {
     });
     this.hub.on('storeStatus', (s: StoreStatus) => this.storeStatus.set(s));
     this.hub.on('sessionsRevoked', () => this.auth.logout('cierre'));
+    // This user was deactivated or got a new password/role: sign out right away
+    this.hub.on('sessionRevoked', () => this.auth.logout('sesion'));
 
     this.hub.onreconnected(() => {
       this.connected.set(true);

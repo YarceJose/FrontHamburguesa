@@ -11,7 +11,7 @@
 .shape {
   position: absolute;
   border-radius: 50%;
-  animation: orbit 50s linear infinite;
+  animation: orbit 90s linear infinite;
 
   &--yellow {
     width: 260px;
@@ -58,6 +58,6 @@
 }
 
 @keyframes orbit {
-  from { transform: rotate(0deg) translateX(18px) rotate(0deg); }
-  to { transform: rotate(360deg) translateX(18px) rotate(-360deg); }
+  from { transform: rotate(0deg) translateX(12px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(12px) rotate(-360deg); }
 }
