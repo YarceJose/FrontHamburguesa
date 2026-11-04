@@ -1,0 +1,31 @@
+<article class="ticket" [class.ticket--late]="late()" [class.ticket--escalated]="order().escalationSent">
+  <header class="ticket__head">
+    <span class="ticket__code">{{ order().code }}</span>
+    <span class="ticket__time" [attr.aria-label]="minutes() + ' minutos'">{{ minutes() }} min</span>
+  </header>
+
+  <p class="ticket__sector">📍 {{ order().sectorName }}</p>
+  @if (showCustomer()) {
+    <p class="ticket__customer">{{ order().customerName }} · <a [href]="'tel:' + order().customerPhone">{{ order().customerPhone }}</a></p>
+  }
+
+  <ul class="ticket__items">
+    @for (item of order().items; track item.productId) {
+      <li><strong>{{ item.quantity }}×</strong> {{ item.productName }}</li>
+    }
+  </ul>
+
+  <footer class="ticket__foot">
+    <span class="ticket__total">{{ order().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span>
+    <span class="ticket__pay" [attr.data-method]="order().paymentMethod">
+      {{ order().paymentMethod === 'Cash' ? 'Efectivo' : 'Transferencia' }}
+      @if (change(); as c) { · cambio {{ c | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} }
+    </span>
+  </footer>
+
+  @if (late()) {
+    <p class="ticket__alert">{{ order().escalationSent ? 'Demorado · admin avisado' : 'Demorado' }}</p>
+  }
+
+  <div class="ticket__actions"><ng-content /></div>
+</article>

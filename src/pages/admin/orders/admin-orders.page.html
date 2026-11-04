@@ -1,0 +1,126 @@
+<div class="shell">
+  <app-topbar />
+  <main class="content">
+    <header class="head">
+      <div>
+        <p class="eyebrow">Administración</p>
+        <h1 class="head__title">Pedidos</h1>
+        <span class="live" [class.live--on]="board.connected()">{{ board.connected() ? 'En vivo' : 'Reconectando…' }}</span>
+      </div>
+
+      @if (board.storeStatus(); as s) {
+        <div class="day">
+          <span class="day__state" [class.day__state--open]="s.acceptingOrders">
+            {{ s.acceptingOrders ? 'Recibiendo pedidos · ' + s.estimatedMinutes + ' min' : s.reason === 'outside_schedule' ? 'Fuera de horario' : s.reason === 'at_capacity' ? 'Capacidad llena' : 'Tienda cerrada' }}
+          </span>
+          @if (confirmClose()) {
+            <span class="day__ask">Cierra la tienda y saca a cocina y domicilios.</span>
+            <button class="btn btn--sm btn--ghost" type="button" (click)="confirmClose.set(false)">No</button>
+          }
+          <button class="btn btn--sm" [class.btn--primary]="s.isOpen" [class.btn--dark]="!s.isOpen" type="button"
+                  [disabled]="dayBusy()" (click)="toggleDay()">
+            {{ s.isOpen ? (confirmClose() ? 'Sí, cerrar jornada' : 'Cerrar jornada') : 'Abrir jornada' }}
+          </button>
+        </div>
+      }
+    </header>
+
+    @if (board.error(); as message) { <p class="banner">{{ message }}</p> }
+
+    <div class="columns">
+      <section class="column column--review" aria-labelledby="col-review">
+        <h2 id="col-review" class="column__title">Pagos por revisar <span class="column__count">{{ review().length }}</span></h2>
+        @for (order of review(); track order.id) {
+          <app-order-ticket [order]="order" [minutes]="minutes(order)">
+            <button class="btn btn--primary big" type="button" (click)="openReceipt(order)">Ver comprobante</button>
+          </app-order-ticket>
+        } @empty { <p class="column__empty">Sin comprobantes pendientes.</p> }
+
+        @if (awaiting().length) {
+          <h3 class="column__sub">Esperando que el cliente pague ({{ awaiting().length }})</h3>
+          @for (order of awaiting(); track order.id) {
+            <app-order-ticket [order]="order" [minutes]="minutes(order)">
+              <button class="btn btn--sm btn--ghost" type="button" (click)="cancel(order)">Cancelar</button>
+            </app-order-ticket>
+          }
+        }
+      </section>
+
+      <section class="column" aria-labelledby="col-kitchen">
+        <h2 id="col-kitchen" class="column__title">En cocina <span class="column__count">{{ kitchen().length }}</span></h2>
+        @for (order of kitchen(); track order.id) {
+          <app-order-ticket [order]="order" [minutes]="minutes(order)">
+            <span class="state">{{ labels[order.status] }}</span>
+            <button class="btn btn--sm btn--ghost" type="button" (click)="cancel(order)">Cancelar</button>
+          </app-order-ticket>
+        } @empty { <p class="column__empty">Cocina libre.</p> }
+      </section>
+
+      <section class="column" aria-labelledby="col-dispatch">
+        <h2 id="col-dispatch" class="column__title">Salida y entrega <span class="column__count">{{ dispatch().length }}</span></h2>
+        @for (order of dispatch(); track order.id) {
+          <app-order-ticket [order]="order" [minutes]="minutes(order)">
+            <span class="state">{{ labels[order.status] }}</span>
+          </app-order-ticket>
+        } @empty { <p class="column__empty">Nada en camino.</p> }
+      </section>
+    </div>
+
+    <section class="history" aria-labelledby="history-title">
+      <h2 id="history-title" class="column__title">Últimos finalizados</h2>
+      <ul>
+        @for (order of board.recentFinished(); track order.id) {
+          <li>
+            <span class="mono">{{ order.code }}</span>
+            <span>{{ order.customerName }} · {{ order.sectorName }}</span>
+            <span class="mono">{{ order.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span>
+            <span class="state" [attr.data-status]="order.status">{{ labels[order.status] }}</span>
+            <span class="muted">{{ order.createdAt | date: 'dd/MM HH:mm' }}</span>
+          </li>
+        } @empty { <li class="muted">Todavía no hay pedidos finalizados.</li> }
+      </ul>
+    </section>
+  </main>
+
+  <app-live-notices [notices]="board.notices()" (dismiss)="board.dismiss($event)" />
+</div>
+
+<app-side-panel label="Comprobante de pago" [open]="receiptOrder() !== null" (closed)="closeReceipt()">
+  @if (receiptOrder(); as o) {
+    <div class="receipt">
+      <header class="panel-head">
+        <p class="eyebrow">Pedido {{ o.code }}</p>
+        <h2 class="panel-head__title">{{ o.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</h2>
+        <p class="panel-head__subtitle">{{ o.customerName }} · {{ o.customerPhone }} · {{ o.sectorName }}</p>
+      </header>
+
+      @if (receiptUrl(); as url) {
+        @if (receiptIsPdf()) {
+          <a class="btn btn--ghost" [href]="url" target="_blank" rel="noopener">Abrir PDF del comprobante</a>
+        } @else {
+          <img class="receipt__img" [src]="url" alt="Comprobante de transferencia" />
+        }
+      } @else {
+        <p class="muted">Cargando comprobante…</p>
+      }
+
+      <p class="alert alert--info">Compara el valor y el código {{ o.code }} con tu app del banco antes de aprobar.</p>
+
+      @if (rejectingId() === o.id) {
+        <div class="field">
+          <label class="field__label" for="reject-reason">Motivo del rechazo (lo verá el cliente)</label>
+          <input #reason id="reject-reason" class="field__input" placeholder="El valor no coincide" />
+        </div>
+        <div class="receipt__actions">
+          <button class="btn btn--ghost" type="button" (click)="rejectingId.set(null)">Volver</button>
+          <button class="btn btn--dark" type="button" (click)="reject(o, reason.value)">Rechazar comprobante</button>
+        </div>
+      } @else {
+        <div class="receipt__actions">
+          <button class="btn btn--ghost" type="button" (click)="rejectingId.set(o.id)">Rechazar</button>
+          <button class="btn btn--primary" type="button" (click)="approve(o)">Aprobar y enviar a cocina</button>
+        </div>
+      }
+    </div>
+  }
+</app-side-panel>

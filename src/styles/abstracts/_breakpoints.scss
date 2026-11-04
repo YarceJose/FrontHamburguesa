@@ -1,11 +1,11 @@
 $breakpoints: (
         sm: 430px,
-        // móvil grande / landscape
+        // large phone / landscape
         md: 768px,
         // md
         lg: 1024px,
         // lg
-        xl: 1440px // pantallas anchas
+        xl: 1440px // wide screens
 );
 
 @mixin respond($breakpoint) {
@@ -14,6 +14,6 @@ $breakpoints: (
       @content;
     }
   } @else {
-    @warn "Breakpoint '#{$breakpoint}' no existe en $breakpoints.";
+    @warn "Breakpoint '#{$breakpoint}' does not exist in $breakpoints.";
   }
 }

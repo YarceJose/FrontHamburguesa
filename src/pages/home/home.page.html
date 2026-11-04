@@ -1,0 +1,107 @@
+<header class="nav">
+  <a class="nav__brand" routerLink="/">
+    <img [src]="brand.logo" alt="" />
+    <span>{{ brand.name }}</span>
+  </a>
+
+  @if (adminEnabled()) {
+    @if (auth.isAdmin()) {
+      <a class="nav__admin" routerLink="/admin">Ir al panel</a>
+    } @else {
+      <button class="nav__admin" type="button" (click)="panel.set('access')" aria-haspopup="dialog"
+              aria-label="Acceso administrador">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Zm0 2.2 6 2.25V11c0 3.9-2.5 7.6-6 8.9-3.5-1.3-6-5-6-8.9V6.45l6-2.25Z" />
+        </svg>
+        <span>Acceso administrador</span>
+      </button>
+    }
+  }
+</header>
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__shape hero__shape--yellow" aria-hidden="true"></div>
+  <div class="hero__shape hero__shape--red" aria-hidden="true"></div>
+  <div class="hero__grid" aria-hidden="true"></div>
+
+  <div class="hero__content">
+    <h1 id="hero-title" class="hero__title">
+      {{ brand.tagline }} <span>{{ brand.taglineHighlight }}</span>
+    </h1>
+    <p class="hero__description">{{ brand.description }}</p>
+    <button class="btn btn--primary hero__cta" type="button" (click)="scrollToMenu()">Ver el menú</button>
+  </div>
+  <img class="hero__image" [src]="brand.logo" alt="Hamburguesa, papas y perro caliente" />
+</section>
+
+<main id="menu" class="menu" aria-labelledby="menu-title">
+  <div class="menu__head">
+    <h2 id="menu-title" class="menu__title">Menú</h2>
+    <p class="menu__subtitle">
+      Elige tus favoritos y arma tu pedido.
+      @if (status()?.acceptingOrders) {
+        <span class="eta">Tiempo estimado: {{ status()!.estimatedMinutes }} min</span>
+      }
+    </p>
+  </div>
+
+  @if (closedMessage(); as message) {
+    <p class="closed" role="status">{{ message }}</p>
+  }
+
+  <div class="chips" role="tablist" aria-label="Categorías">
+    <button class="chip" role="tab" type="button" [class.chip--active]="selectedCategory() === null"
+            [attr.aria-selected]="selectedCategory() === null" (click)="selectedCategory.set(null)">
+      Todo
+    </button>
+    @for (category of categories(); track category.id) {
+      <button class="chip" role="tab" type="button" [class.chip--active]="selectedCategory() === category.id"
+              [attr.aria-selected]="selectedCategory() === category.id" (click)="selectedCategory.set(category.id)">
+        {{ category.label }}
+      </button>
+    }
+  </div>
+
+  @if (loadingMenu()) {
+    <p class="empty">Cargando el menú…</p>
+  } @else if (menuError(); as message) {
+    <p class="empty">{{ message }}</p>
+  } @else if (visibleProducts().length) {
+    <div class="grid">
+      @for (product of visibleProducts(); track product.id) {
+        <app-product-card [product]="product" [quantity]="quantityOf(product)" [disabled]="!!closedMessage()"
+                          (add)="addToCart($event)" />
+      }
+    </div>
+  } @else {
+    <p class="empty">Pronto agregaremos productos en esta categoría.</p>
+  }
+</main>
+
+@if (cartCount() > 0) {
+  <aside class="order" aria-live="polite" aria-label="Tu pedido">
+    <span class="order__count">{{ cartCount() }}</span>
+    <span class="order__text">
+      {{ cartCount() === 1 ? 'producto' : 'productos' }} ·
+      <strong>{{ cartTotal() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong>
+    </span>
+    <button class="order__clear" type="button" (click)="clearCart()">Vaciar</button>
+    <button class="order__go" type="button" [disabled]="!!closedMessage()" (click)="panel.set('checkout')">Hacer pedido</button>
+  </aside>
+}
+
+@if (adminEnabled()) {
+  <app-side-panel label="Acceso administrador" [open]="panel() === 'access'" (closed)="panel.set(null)">
+    <!-- Created only when opened, so the username field gets the focus -->
+    @if (panel() === 'access') {
+      <app-admin-access (cancel)="panel.set(null)" />
+    }
+  </app-side-panel>
+}
+
+<app-side-panel label="Tu pedido" [open]="panel() === 'checkout'" (closed)="panel.set(null)">
+  @if (panel() === 'checkout') {
+    <app-checkout [lines]="cartLines()" [total]="cartTotal()" (changeQuantity)="changeQuantity($event.productId, $event.delta)"
+                  (placed)="onPlaced($event)" (cancel)="panel.set(null)" />
+  }
+</app-side-panel>

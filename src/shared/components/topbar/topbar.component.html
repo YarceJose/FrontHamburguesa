@@ -1,0 +1,31 @@
+<header class="topbar">
+  <a class="topbar__brand" routerLink="/">
+    <img class="topbar__logo" [src]="brand.logo" alt="" />
+    <span>{{ brand.name }}</span>
+  </a>
+
+  @if (auth.isAdmin()) {
+    <nav class="topbar__nav" aria-label="Secciones">
+      <a routerLink="/admin" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Pedidos</a>
+      <a routerLink="/admin/usuarios" routerLinkActive="is-active">Usuarios</a>
+      <a routerLink="/admin/tienda" routerLinkActive="is-active">Tienda</a>
+      <a routerLink="/admin/perfil" routerLinkActive="is-active">Mi perfil</a>
+    </nav>
+  }
+
+  @if (user(); as u) {
+    <div class="topbar__user">
+      <span class="topbar__avatar" aria-hidden="true">{{ initials() }}</span>
+      <span class="topbar__meta">
+        <span class="topbar__name">{{ u.fullName }}</span>
+        <span class="topbar__role">{{ roleLabel() }}</span>
+      </span>
+      <button class="topbar__logout" type="button" (click)="auth.logout()">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path fill="currentColor" d="M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5v-2H5V5h5V3Zm6.6 4.6L15.2 9l2 2H9v2h8.2l-2 2 1.4 1.4L21 12l-4.4-4.4Z" />
+        </svg>
+        <span>Salir</span>
+      </button>
+    </div>
+  }
+</header>

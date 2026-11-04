@@ -1,0 +1,43 @@
+<div class="shell">
+  <app-topbar />
+  <main class="content">
+    <header class="head">
+      <div>
+        <p class="eyebrow">Cocina</p>
+        <h1 class="head__title">Pedidos por preparar</h1>
+      </div>
+      <span class="live" [class.live--on]="board.connected()">{{ board.connected() ? 'En vivo' : 'Reconectando…' }}</span>
+    </header>
+
+    @if (board.error(); as message) { <p class="banner">{{ message }}</p> }
+
+    <div class="columns">
+      <section class="column" aria-labelledby="col-new">
+        <h2 id="col-new" class="column__title">Recibidos <span class="column__count">{{ toPrepare().length }}</span></h2>
+        @for (order of toPrepare(); track order.id) {
+          <app-order-ticket [order]="order" [minutes]="board.minutesSince(order.receivedAt)" [showCustomer]="false">
+            <button class="btn btn--dark big" type="button" [disabled]="board.busyId() === order.id"
+                    (click)="board.advance(order, 'start')">Empezar</button>
+            <button class="btn btn--primary big" type="button" [disabled]="board.busyId() === order.id"
+                    (click)="board.advance(order, 'left-kitchen')">Salió de cocina</button>
+          </app-order-ticket>
+        } @empty {
+          <p class="column__empty">Sin pedidos nuevos.</p>
+        }
+      </section>
+
+      <section class="column" aria-labelledby="col-cooking">
+        <h2 id="col-cooking" class="column__title">En preparación <span class="column__count">{{ preparing().length }}</span></h2>
+        @for (order of preparing(); track order.id) {
+          <app-order-ticket [order]="order" [minutes]="board.minutesSince(order.receivedAt)" [showCustomer]="false">
+            <button class="btn btn--primary big" type="button" [disabled]="board.busyId() === order.id"
+                    (click)="board.advance(order, 'left-kitchen')">Salió de cocina</button>
+          </app-order-ticket>
+        } @empty {
+          <p class="column__empty">Nada en preparación.</p>
+        }
+      </section>
+    </div>
+  </main>
+  <app-live-notices [notices]="board.notices()" (dismiss)="board.dismiss($event)" />
+</div>

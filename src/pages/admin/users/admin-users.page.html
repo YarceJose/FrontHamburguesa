@@ -1,0 +1,163 @@
+<div class="shell">
+  <app-topbar />
+
+  <main class="content">
+    <header class="head">
+      <div>
+        <p class="eyebrow">Administración</p>
+        <h1 class="head__title">Usuarios</h1>
+        <p class="head__subtitle">Personal y clientes registrados en el sistema.</p>
+      </div>
+      <button class="btn btn--primary" type="button" (click)="openCreate()">
+        <span aria-hidden="true">+</span> Nuevo usuario
+      </button>
+    </header>
+
+    <section class="stats" aria-label="Resumen de usuarios activos">
+      <div class="stat">
+        <span class="stat__value">{{ counts().all }}</span>
+        <span class="stat__label">Activos</span>
+      </div>
+      <div class="stat stat--cook">
+        <span class="stat__value">{{ counts().Cook }}</span>
+        <span class="stat__label">Cocina</span>
+      </div>
+      <div class="stat stat--delivery">
+        <span class="stat__value">{{ counts().Delivery }}</span>
+        <span class="stat__label">Domiciliarios</span>
+      </div>
+      <div class="stat stat--customer">
+        <span class="stat__value">{{ counts().Customer }}</span>
+        <span class="stat__label">Clientes</span>
+      </div>
+    </section>
+
+    <section class="board" aria-labelledby="list-title">
+      <h2 id="list-title" class="visually-hidden">Lista de usuarios</h2>
+
+      <div class="toolbar">
+        <div class="chips" role="group" aria-label="Filtrar por rol">
+          <button class="chip" type="button" [class.chip--active]="roleFilter() === 'all'"
+                  [attr.aria-pressed]="roleFilter() === 'all'" (click)="roleFilter.set('all')">
+            Todos
+          </button>
+          @for (role of roles; track role) {
+            <button class="chip" type="button" [class.chip--active]="roleFilter() === role"
+                    [attr.aria-pressed]="roleFilter() === role" (click)="roleFilter.set(role)">
+              {{ rolePlurals[role] }}
+            </button>
+          }
+        </div>
+
+        <div class="toolbar__right">
+          <label class="search">
+            <span class="visually-hidden">Buscar</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path fill="currentColor" d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
+            </svg>
+            <input type="search" placeholder="Nombre, correo o teléfono" [value]="search()"
+                   (input)="search.set($any($event.target).value)" />
+          </label>
+
+          <div class="segmented" role="group" aria-label="Estado">
+            <button type="button" [class.is-active]="statusFilter() === 'active'" (click)="statusFilter.set('active')">Activos</button>
+            <button type="button" [class.is-active]="statusFilter() === 'inactive'" (click)="statusFilter.set('inactive')">
+              Inactivos @if (counts().inactive) { <span class="segmented__count">{{ counts().inactive }}</span> }
+            </button>
+            <button type="button" [class.is-active]="statusFilter() === 'all'" (click)="statusFilter.set('all')">Todos</button>
+          </div>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton" aria-label="Cargando usuarios">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      } @else if (loadError(); as message) {
+        <div class="state">
+          <p>{{ message }}</p>
+          <button class="btn btn--ghost btn--sm" type="button" (click)="load()">Reintentar</button>
+        </div>
+      } @else if (visibleUsers().length === 0) {
+        <div class="state"><p>No hay usuarios que coincidan con los filtros.</p></div>
+      } @else {
+        <div class="list" role="table" aria-label="Usuarios">
+          <div class="row row--head" role="row">
+            <span role="columnheader">Usuario</span>
+            <span role="columnheader">Rol</span>
+            <span role="columnheader">Teléfono</span>
+            <span role="columnheader">Último ingreso</span>
+            <span role="columnheader">Estado</span>
+            <span role="columnheader"><span class="visually-hidden">Acciones</span></span>
+          </div>
+
+          @for (user of visibleUsers(); track user.id) {
+            <div class="row" role="row" [class.row--inactive]="!user.isActive">
+              <div class="who" role="cell">
+                <span class="who__avatar" aria-hidden="true">{{ initials(user) }}</span>
+                <span class="who__text">
+                  <span class="who__name">
+                    {{ user.fullName }}
+                    @if (isSelf(user)) { <span class="you">Tú</span> }
+                  </span>
+                  <span class="who__email">{{ user.username ? '@' + user.username : (user.email ?? 'Sin correo') }}</span>
+                </span>
+              </div>
+              <span role="cell"><span class="role" [attr.data-role]="user.role">{{ roleLabels[user.role] }}</span></span>
+              <span class="mono" role="cell" data-label="Teléfono">{{ user.phone ?? '—' }}</span>
+              <span class="mono" role="cell" data-label="Último ingreso">
+                {{ (user.lastLoginAt | date: 'dd/MM/yy HH:mm') ?? '—' }}
+              </span>
+              <span role="cell">
+                <span class="status" [class.status--off]="!user.isActive">{{ user.isActive ? 'Activo' : 'Inactivo' }}</span>
+              </span>
+
+              <div class="actions" role="cell">
+                @if (confirmingId() === user.id) {
+                  <span class="actions__ask">¿Desactivar?</span>
+                  <button class="btn btn--sm btn--primary" type="button" (click)="deactivate(user)">Sí</button>
+                  <button class="btn btn--sm btn--ghost" type="button" (click)="confirmingId.set(null)">No</button>
+                } @else {
+                  @if (user.role !== 'Customer' && user.isActive) {
+                    <button class="btn btn--sm btn--ghost" type="button" (click)="openPassword(user)">Contraseña</button>
+                  }
+                  @if (!isSelf(user)) {
+                    @if (user.isActive) {
+                      <button class="btn btn--sm btn--ghost" type="button" [disabled]="busyId() === user.id"
+                              (click)="confirmingId.set(user.id)">Desactivar</button>
+                    } @else {
+                      <button class="btn btn--sm btn--dark" type="button" [disabled]="busyId() === user.id"
+                              (click)="activate(user)">Activar</button>
+                    }
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </main>
+
+  <div class="toast-zone" aria-live="polite">
+    @if (toast(); as t) {
+      <p class="toast" [class.toast--error]="t.kind === 'error'">{{ t.text }}</p>
+    }
+  </div>
+</div>
+
+<app-side-panel [open]="panel() !== null" [label]="panel()?.kind === 'password' ? 'Cambiar contraseña' : 'Nuevo usuario'"
+                (closed)="closePanel()">
+  @switch (panel()?.kind) {
+    @case ('create') {
+      <app-user-form (created)="onCreated($event)" (cancel)="closePanel()" />
+    }
+    @case ('password') {
+      @if (panel(); as p) {
+        @if (p.kind === 'password') {
+          <app-password-form [user]="p.user" (done)="onPasswordReset($event)" (cancel)="closePanel()" />
+        }
+      }
+    }
+  }
+</app-side-panel>

@@ -1,25 +1,104 @@
-*{
+@use 'base/forms';
+
+/* ---------- Design tokens (palette from the Figma brief) ---------- */
+:root {
+  /* Brand */
+  --color-background: #002455;
+  /* navy */
+    --color-primary: #e73f1e;
+    /* red-orange: main actions */
+    --color-secondary: #fb6c00;
+    /* orange */
+    --color-tertiary: #f9b637;
+    /* yellow: prices, highlights */
+    --color-accent: #c00707;
+    /* deep red: "Conecta", emphasis */
+    --color-black: #000000;
+    --color-white: #ffffff;
+
+  /* Text */
+    --color-text-primary: #ffffff;
+    /* on dark surfaces */
+    --color-text-secondary: #000000;
+  /* on light surfaces */
+    --color-text-muted: #5b6478;
+
+    /* Surfaces */
+    --color-surface: #ffffff;
+    --color-surface-muted: #f3f5f9;
+    --color-border: #e3e8f0;
+    --color-success: #12955a;
+    --color-danger: #c00707;
+    --color-navy-700: #00336f;
+    --color-navy-900: #001735;
+
+    /* Typography */
+    --font-sans: 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'Roboto Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+    /* Shape & depth (Figma uses soft 0 0 4px shadows instead of borders) */
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --radius-xl: 32px;
+    --radius-pill: 999px;
+    --shadow-field: 0 0 0 1px rgb(0 36 85 / 0.08), 0 1px 4px rgb(0 0 0 / 0.08);
+    --shadow-soft: 0 1px 2px rgb(0 23 53 / 0.06), 0 8px 24px -12px rgb(0 23 53 / 0.18);
+    --shadow-card: 0 30px 80px -30px rgb(0 10 30 / 0.6);
+    --shadow-primary: 0 10px 22px -10px rgb(231 63 30 / 0.75);
+    --focus-ring: 0 0 0 3px rgb(231 63 30 / 0.3);
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-:root{
-  /**Colores primarios para produccion**/
-    --color-primary: #E73F1E;
-    --color-secondary: #FB6C00;
-    --color-tertiary: #F9B637;
-    --color-background: #002455;
-    --color-cuartiary: #C00707;
-
-  /**Colores de texto**/
-    --color-text-primary: #FFFFFF;
-    --color-text-secondary: #000000;
+html,
+body {
+  min-height: 100%;
 }
 
-  /**Diseño global**/
-  body{
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--color-background);
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+    -webkit-font-smoothing: antialiased;
   }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+
+  body.no-scroll {
+    overflow: hidden;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+}

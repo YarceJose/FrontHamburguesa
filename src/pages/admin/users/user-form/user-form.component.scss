@@ -1,0 +1,73 @@
+:host {
+  display: grid;
+  gap: 20px;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+
+  &__actions {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  border: none;
+
+  legend {
+    margin-bottom: 6px;
+  }
+
+  &__option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 14px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-field);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: box-shadow 0.2s, color 0.2s;
+
+    input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    &:focus-within {
+      box-shadow: var(--shadow-field), var(--focus-ring);
+    }
+
+    &.is-active {
+      color: var(--color-background);
+      box-shadow: 0 0 0 2px var(--color-background);
+    }
+  }
+
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-secondary);
+
+    &[data-role='Delivery'] {
+      background: var(--color-tertiary);
+    }
+  }
+}

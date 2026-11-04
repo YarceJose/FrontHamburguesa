@@ -1,0 +1,42 @@
+<div class="shell">
+  <app-topbar />
+
+  @if (user(); as u) {
+    <main class="content">
+      <section class="profile" aria-label="Perfil">
+        <div class="profile__avatar" aria-hidden="true">{{ initials() }}</div>
+        <div class="profile__info">
+          <p class="eyebrow">Administrador</p>
+          <h1 class="profile__name">{{ u.fullName }}</h1>
+          <p class="profile__email">{{ u.email }}</p>
+          <p class="profile__status"><span class="dot" aria-hidden="true"></span> Cuenta activa</p>
+        </div>
+      </section>
+
+      <div class="grid grid--single">
+        <section class="panel" aria-labelledby="details-title">
+          <h2 id="details-title" class="panel__title">Información personal</h2>
+          <dl class="rows">
+            <div class="rows__item">
+              <dt>Correo electrónico</dt>
+              <dd>{{ u.email ?? '—' }}</dd>
+            </div>
+            <div class="rows__item">
+              <dt>Teléfono</dt>
+              <dd>{{ u.phone ?? '—' }}</dd>
+            </div>
+            <div class="rows__item">
+              <dt>Fecha de registro</dt>
+              <dd>{{ u.createdAt | date: "d 'de' MMMM 'de' y" }}</dd>
+            </div>
+            <div class="rows__item">
+              <dt>Último ingreso</dt>
+              <dd>{{ (u.lastLoginAt | date: 'dd/MM/yyyy HH:mm') ?? '—' }}</dd>
+            </div>
+          </dl>
+        </section>
+
+      </div>
+    </main>
+  }
+</div>

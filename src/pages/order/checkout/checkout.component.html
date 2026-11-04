@@ -1,0 +1,98 @@
+<header class="panel-head">
+  <p class="eyebrow">Tu pedido</p>
+  <h2 class="panel-head__title">Datos de entrega</h2>
+  <p class="panel-head__subtitle">No necesitas cuenta. Te llevamos el pedido a tu sector.</p>
+</header>
+
+<ul class="lines">
+  @for (line of lines(); track line.product.id) {
+    <li class="line">
+      <span class="line__name">{{ line.product.name }}</span>
+      <span class="qty">
+        <button type="button" aria-label="Quitar uno" (click)="changeQuantity.emit({ productId: line.product.id, delta: -1 })">−</button>
+        <span>{{ line.quantity }}</span>
+        <button type="button" aria-label="Agregar uno" (click)="changeQuantity.emit({ productId: line.product.id, delta: 1 })">+</button>
+      </span>
+      <span class="line__price">{{ line.product.price * line.quantity | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span>
+    </li>
+  }
+  <li class="line line--total">
+    <span>Total</span>
+    <span class="line__price">{{ total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span>
+  </li>
+</ul>
+
+<form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label class="field__label" for="customerName">Nombre</label>
+    <input id="customerName" class="field__input" formControlName="customerName" autocomplete="name"
+           [attr.aria-invalid]="invalid('customerName')" />
+    @if (invalid('customerName')) { <span class="field__error">Escribe tu nombre.</span> }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="customerPhone">Celular</label>
+    <input id="customerPhone" class="field__input" type="tel" formControlName="customerPhone" autocomplete="tel"
+           placeholder="300 123 4567" [attr.aria-invalid]="invalid('customerPhone')" />
+    @if (invalid('customerPhone')) { <span class="field__error">Escribe un número válido.</span> }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="sector">Vereda, sector o barrio</label>
+    <select id="sector" class="field__input" formControlName="sector" [attr.aria-invalid]="invalid('sector')">
+      <option value="" disabled>Elige tu sector</option>
+      @for (sector of sectors(); track sector.id) {
+        <option [value]="sector.id">{{ sector.name }}</option>
+      }
+      <option [value]="other">Otro (escribirlo)</option>
+    </select>
+    @if (invalid('sector')) { <span class="field__error">Elige tu sector.</span> }
+  </div>
+
+  @if (isOther()) {
+    <div class="field">
+      <label class="field__label" for="otherSector">¿Cuál?</label>
+      <input id="otherSector" class="field__input" formControlName="otherSector" placeholder="Ej.: Vereda San José"
+             [attr.aria-invalid]="invalid('otherSector')" />
+      @if (invalid('otherSector')) { <span class="field__error">Escribe tu vereda o sector.</span> }
+    </div>
+  }
+
+  <fieldset class="pay">
+    <legend class="field__label">¿Cómo pagas?</legend>
+    <label class="pay__option" [class.is-active]="isCash()">
+      <input type="radio" formControlName="paymentMethod" value="Cash" />
+      <span class="pay__title">Efectivo</span>
+      <span class="pay__hint">Pagas al recibir</span>
+    </label>
+    <label class="pay__option" [class.is-active]="!isCash()" [class.is-disabled]="!transferAvailable()">
+      <input type="radio" formControlName="paymentMethod" value="Transfer" [attr.disabled]="transferAvailable() ? null : true" />
+      <span class="pay__title">Transferencia</span>
+      <span class="pay__hint">{{ transferAvailable() ? 'Nequi, Bancolombia o Bre-B con QR' : 'No disponible ahora' }}</span>
+    </label>
+  </fieldset>
+
+  @if (isCash()) {
+    <div class="field">
+      <label class="field__label" for="cashAmount">¿Con cuánto pagas? <span class="optional">(opcional, para llevarte el cambio)</span></label>
+      <input id="cashAmount" class="field__input field__input--mono" type="number" inputmode="numeric" min="0" step="1000"
+             formControlName="cashAmount" placeholder="50000" />
+      @if (change() !== null) {
+        <span class="hint">Te llevamos {{ change() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} de cambio.</span>
+      }
+    </div>
+  } @else {
+    <p class="alert alert--info">Al confirmar verás el QR y los datos para transferir. Luego subes el comprobante y lo revisamos.</p>
+  }
+
+  <div aria-live="polite">
+    @if (error(); as message) { <p class="alert alert--error">{{ message }}</p> }
+  </div>
+
+  <div class="form__actions">
+    <button class="btn btn--ghost" type="button" (click)="cancel.emit()">Seguir comprando</button>
+    <button class="btn btn--primary" type="submit" [disabled]="saving() || lines().length === 0">
+      @if (saving()) { <span class="spinner" aria-hidden="true"></span> Enviando… } @else { Confirmar pedido }
+    </button>
+  </div>
+</form>

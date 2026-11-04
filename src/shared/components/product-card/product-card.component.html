@@ -1,0 +1,18 @@
+<article class="card">
+  <div class="card__media">
+    <img [src]="product().imageUrl ?? fallbackImage" [alt]="product().name" loading="lazy" />
+    @if (quantity() > 0) {
+      <span class="card__qty" aria-label="En tu pedido">{{ quantity() }}</span>
+    }
+  </div>
+  <div class="card__body">
+    <h3 class="card__name">{{ product().name }}</h3>
+    <p class="card__description">{{ product().description }}</p>
+    <div class="card__footer">
+      <span class="card__price">{{ product().price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span>
+      <button class="card__add" type="button" [disabled]="disabled()" (click)="add.emit(product())">
+        <span aria-hidden="true">+</span> Agregar
+      </button>
+    </div>
+  </div>
+</article>

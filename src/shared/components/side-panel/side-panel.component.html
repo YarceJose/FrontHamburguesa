@@ -1,0 +1,9 @@
+@if (open()) {
+  <div class="layer" role="dialog" aria-modal="true" [attr.aria-label]="label()">
+    <button class="layer__backdrop" type="button" aria-label="Cerrar" (click)="closed.emit()"></button>
+    <div class="layer__panel">
+      <span class="layer__handle" aria-hidden="true"></span>
+      <ng-content />
+    </div>
+  </div>
+}
