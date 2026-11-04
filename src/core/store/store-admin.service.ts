@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { PaymentAccount, Sector, StoreSettings, StoreStatus } from './store.model';
+import { AdminProduct, PaymentAccount, ProductRequest, Sector, StoreSettings, StoreStatus } from './store.model';
 
 export interface SectorRequest {
   name: string;
@@ -18,7 +18,7 @@ export interface PaymentAccountRequest {
   isActive: boolean;
 }
 
-/** Admin store configuration: rules, day open/close, sectors and payment accounts. */
+/** Admin store configuration: rules, day open/close, menu products, sectors and payment accounts. */
 @Injectable({ providedIn: 'root' })
 export class StoreAdminService {
   private readonly http = inject(HttpClient);
@@ -38,6 +38,28 @@ export class StoreAdminService {
 
   openDay(): Observable<StoreStatus> {
     return this.http.post<StoreStatus>(`${this.api}/store/open-day`, null);
+  }
+
+  products(): Observable<AdminProduct[]> {
+    return this.http.get<AdminProduct[]>(`${this.api}/admin/products`);
+  }
+
+  createProduct(request: ProductRequest): Observable<AdminProduct> {
+    return this.http.post<AdminProduct>(`${this.api}/admin/products`, request);
+  }
+
+  updateProduct(id: number, request: ProductRequest): Observable<AdminProduct> {
+    return this.http.put<AdminProduct>(`${this.api}/admin/products/${id}`, request);
+  }
+
+  uploadProductImage(id: number, file: File): Observable<AdminProduct> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<AdminProduct>(`${this.api}/admin/products/${id}/image`, form);
+  }
+
+  removeProductImage(id: number): Observable<AdminProduct> {
+    return this.http.delete<AdminProduct>(`${this.api}/admin/products/${id}/image`);
   }
 
   sectors(): Observable<Sector[]> {

@@ -1,7 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { BRAND } from '../../../core/config/brand';
-import { MenuProduct } from '../../../core/store/store.model';
+import { MenuProduct, productImageSrc } from '../../../core/store/store.model';
+import { environment } from '../../../environments/environment';
 
 /** Menu product (Figma Frame 4 card). */
 @Component({
@@ -15,5 +16,5 @@ export class ProductCardComponent {
   readonly quantity = input(0);
   readonly add = output<MenuProduct>();
   readonly disabled = input(false);
-  protected readonly fallbackImage = BRAND.logo;
+  protected readonly image = computed(() => productImageSrc(this.product(), environment.apiUrl) ?? BRAND.logo);
 }

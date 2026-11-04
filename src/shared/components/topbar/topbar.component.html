@@ -7,6 +7,7 @@
   @if (auth.isAdmin()) {
     <nav class="topbar__nav" aria-label="Secciones">
       <a routerLink="/admin" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Pedidos</a>
+      <a routerLink="/admin/productos" routerLinkActive="is-active">Productos</a>
       <a routerLink="/admin/usuarios" routerLinkActive="is-active">Usuarios</a>
       <a routerLink="/admin/tienda" routerLinkActive="is-active">Tienda</a>
       <a routerLink="/admin/perfil" routerLinkActive="is-active">Mi perfil</a>

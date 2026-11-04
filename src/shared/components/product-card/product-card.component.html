@@ -1,6 +1,6 @@
 <article class="card">
   <div class="card__media">
-    <img [src]="product().imageUrl ?? fallbackImage" [alt]="product().name" loading="lazy" />
+    <img [src]="image()" [alt]="product().name" loading="lazy" />
     @if (quantity() > 0) {
       <span class="card__qty" aria-label="En tu pedido">{{ quantity() }}</span>
     }

@@ -5,20 +5,11 @@ import { toApiError } from '../../core/api/api-error';
 import { AuthService } from '../../core/auth/auth.service';
 import { BRAND } from '../../core/config/brand';
 import { OrdersService } from '../../core/orders/orders.service';
-import { MenuProduct, StoreStatus } from '../../core/store/store.model';
+import { categoryLabel, MenuProduct, StoreStatus } from '../../core/store/store.model';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { SidePanelComponent } from '../../shared/components/side-panel/side-panel.component';
 import { AdminAccessComponent } from '../auth/admin-access/admin-access.component';
 import { CartLine, CheckoutComponent } from '../order/checkout/checkout.component';
-
-const CATEGORY_LABELS: Record<string, string> = {
-  hamburguesas: 'Hamburguesas',
-  carnes: 'Carnes',
-  perros: 'Perros',
-  salchipapas: 'Salchipapas',
-  bebidas: 'Bebidas',
-  adiciones: 'Adiciones',
-};
 
 /**
  * Main public view: brand hero (Figma Frame 1) + menu from the API (Figma Frame 4) + cart.
@@ -54,7 +45,7 @@ export class HomePage {
   protected readonly categories = computed(() =>
     [...new Set(this.products().map((p) => p.category ?? 'otros'))].map((id) => ({
       id,
-      label: CATEGORY_LABELS[id] ?? id.charAt(0).toUpperCase() + id.slice(1),
+      label: categoryLabel(id),
     })),
   );
   protected readonly visibleProducts = computed(() => {
