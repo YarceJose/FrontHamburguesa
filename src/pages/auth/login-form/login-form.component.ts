@@ -5,7 +5,7 @@ import { toApiError } from '../../../core/api/api-error';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserRole } from '../../../core/models/user.model';
 
-/** Username + password sign-in shared by the admin panel and /personal. */
+/** Username + password sign-in for every staff role (shown only with ?admin=true). */
 @Component({
   selector: 'app-login-form',
   imports: [ReactiveFormsModule],

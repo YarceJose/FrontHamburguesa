@@ -1,17 +1,21 @@
-import { Component, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { LoginFormComponent } from '../login-form/login-form.component';
 
-/** Admin sign-in panel (only reachable with ?admin=true). The JWT stays behind the scenes. */
+/**
+ * Staff sign-in panel (only reachable with ?admin=true). Admin, kitchen and delivery sign in here
+ * with their username and password; each one lands on their own view. The JWT stays behind the scenes.
+ */
 @Component({
   selector: 'app-admin-access',
   imports: [LoginFormComponent],
   template: `
     <header class="panel-head">
       <p class="eyebrow restricted"><span class="dot" aria-hidden="true"></span> Acceso restringido</p>
-      <h2 class="panel-head__title">Administrador</h2>
-      <p class="panel-head__subtitle">Ingresa con tu usuario y contraseña.</p>
+      <h2 class="panel-head__title">Iniciar sesión</h2>
+      <p class="panel-head__subtitle">Administrador, cocina o domicilios: ingresa con tu usuario y contraseña.</p>
     </header>
-    <app-login-form [allowedRoles]="['Admin']" wrongRoleMessage="Cocina y domicilios ingresan en /personal." />
+    @if (notice(); as message) { <p class="alert alert--info">{{ message }}</p> }
+    <app-login-form [allowedRoles]="['Admin', 'Cook', 'Delivery']" />
     <button class="back" type="button" (click)="cancel.emit()">Cancelar</button>
   `,
   styles: `
@@ -23,5 +27,18 @@ import { LoginFormComponent } from '../login-form/login-form.component';
   `,
 })
 export class AdminAccessComponent {
+  /** Why the previous session ended: 'cierre' (day closed) or 'sesion' (access changed / expired). */
+  readonly reason = input<string>();
   readonly cancel = output<void>();
+
+  protected readonly notice = computed(() => {
+    switch (this.reason()) {
+      case 'cierre':
+        return 'El administrador cerró la jornada. Hasta la próxima.';
+      case 'sesion':
+        return 'Tu sesión terminó. Ingresa de nuevo.';
+      default:
+        return null;
+    }
+  });
 }

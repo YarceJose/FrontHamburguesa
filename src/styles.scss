@@ -99,6 +99,8 @@ body {
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important; // an infinite loop at 0.01ms would flicker
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
 }

@@ -1,4 +1,5 @@
-export type UserRole = 'Admin' | 'Cook' | 'Delivery' | 'Customer';
+/** People who sign in. Customers are not users: their data lives in each order. */
+export type UserRole = 'Admin' | 'Cook' | 'Delivery';
 
 /** Roles an Admin can create from the panel. */
 export type StaffRole = Extract<UserRole, 'Cook' | 'Delivery'>;
@@ -31,7 +32,6 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   Admin: 'Administrador',
   Cook: 'Cocina',
   Delivery: 'Domiciliario',
-  Customer: 'Cliente',
 };
 
 export interface CreateStaffUserRequest {

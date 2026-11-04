@@ -63,7 +63,7 @@
 
   &--cook { --accent: var(--color-secondary); }
   &--delivery { --accent: var(--color-tertiary); }
-  &--customer { --accent: var(--color-success); }
+  &--admin { --accent: var(--color-primary); }
 
   &__value {
     font-family: var(--font-mono);
@@ -309,7 +309,6 @@
 
   &[data-role='Cook'] { background: rgb(251 108 0 / 0.14); color: #a14600; }
   &[data-role='Delivery'] { background: rgb(249 182 55 / 0.22); color: #7a5200; }
-  &[data-role='Customer'] { background: rgb(18 149 90 / 0.12); color: #0c6b40; }
 }
 
 .status {

@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { guestGuard, roleGuard } from '../core/auth/auth.guards';
+import { roleGuard } from '../core/auth/auth.guards';
 
 export const routes: Routes = [
   {
-    // Public home + menu + cart. Admin access only appears with ?admin=true
+    // Public home + menu + cart. The sign-in (every staff role) only appears with ?admin=true
     path: '',
     title: 'Comidas donde Piedad',
     loadComponent: () => import('../pages/home/home.page').then((m) => m.HomePage),
@@ -13,12 +13,8 @@ export const routes: Routes = [
     title: 'Tu pedido',
     loadComponent: () => import('../pages/order/track/track.page').then((m) => m.TrackPage),
   },
-  {
-    path: 'personal',
-    title: 'Ingreso del personal',
-    canActivate: [guestGuard],
-    loadComponent: () => import('../pages/auth/staff-login/staff-login.page').then((m) => m.StaffLoginPage),
-  },
+  // Old staff sign-in address: everyone signs in from the home page with ?admin=true now
+  { path: 'personal', redirectTo: '' },
   {
     path: 'cocina',
     title: 'Cocina',

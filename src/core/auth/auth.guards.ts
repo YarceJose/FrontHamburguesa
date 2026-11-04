@@ -3,18 +3,14 @@ import { CanActivateFn, Router } from '@angular/router';
 import { UserRole } from '../models/user.model';
 import { AuthService } from './auth.service';
 
-/** Only the given roles; anyone else goes to their own view (or to sign-in). */
+/** Only the given roles. Signed-in users with another role go to their own view; anyone else to the sign-in. */
 export const roleGuard =
   (...roles: UserRole[]): CanActivateFn =>
   () => {
     const auth = inject(AuthService);
     const role = auth.role();
     if (role && roles.includes(role)) return true;
-    return inject(Router).createUrlTree([role ? auth.homeUrl(role) : '/personal']);
+    return role
+      ? inject(Router).createUrlTree([auth.homeUrl(role)])
+      : inject(Router).createUrlTree(['/'], { queryParams: { admin: 'true' } });
   };
-
-/** Staff sign-in page: someone already signed in goes to their view. */
-export const guestGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
-  return !auth.isAuthenticated() || inject(Router).createUrlTree([auth.homeUrl()]);
-};

@@ -17,12 +17,11 @@ interface Toast {
   text: string;
 }
 
-const ROLE_ORDER: UserRole[] = ['Admin', 'Cook', 'Delivery', 'Customer'];
+const ROLE_ORDER: UserRole[] = ['Admin', 'Cook', 'Delivery'];
 const ROLE_PLURALS: Record<UserRole, string> = {
   Admin: 'Administradores',
   Cook: 'Cocina',
   Delivery: 'Domiciliarios',
-  Customer: 'Clientes',
 };
 
 /** Admin users panel: who exists, and staff management (create Cook/Delivery, passwords, activation). */
@@ -65,7 +64,6 @@ export class AdminUsersPage {
       Admin: byRole('Admin'),
       Cook: byRole('Cook'),
       Delivery: byRole('Delivery'),
-      Customer: byRole('Customer'),
       inactive: this.users().length - active.length,
     };
   });

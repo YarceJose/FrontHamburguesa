@@ -37,14 +37,11 @@ export class AuthService {
       .pipe(tap((res) => this.store(res)), map((res) => res.user));
   }
 
-  /** Clears the session. `reason` is shown on the sign-in page (e.g. the day was closed). */
+  /** Clears the session and goes back to the sign-in. `reason` is shown there (e.g. the day was closed). */
   logout(reason?: string): void {
-    const wasAdmin = this.isAdmin();
     this.session.set(null);
     localStorage.removeItem(STORAGE_KEY);
-    void this.router.navigate(wasAdmin ? ['/'] : ['/personal'], {
-      queryParams: wasAdmin ? { admin: 'true' } : reason ? { motivo: reason } : {},
-    });
+    void this.router.navigate(['/'], { queryParams: reason ? { admin: 'true', motivo: reason } : { admin: 'true' } });
   }
 
   /** Drops the session without navigating (e.g. signed in at the wrong entry point). */

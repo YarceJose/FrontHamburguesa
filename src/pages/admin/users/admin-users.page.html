@@ -6,7 +6,7 @@
       <div>
         <p class="eyebrow">Administración</p>
         <h1 class="head__title">Usuarios</h1>
-        <p class="head__subtitle">Personal y clientes registrados en el sistema.</p>
+        <p class="head__subtitle">Administradores, cocina y domiciliarios que ingresan al sistema.</p>
       </div>
       <button class="btn btn--primary" type="button" (click)="openCreate()">
         <span aria-hidden="true">+</span> Nuevo usuario
@@ -26,9 +26,9 @@
         <span class="stat__value">{{ counts().Delivery }}</span>
         <span class="stat__label">Domiciliarios</span>
       </div>
-      <div class="stat stat--customer">
-        <span class="stat__value">{{ counts().Customer }}</span>
-        <span class="stat__label">Clientes</span>
+      <div class="stat stat--admin">
+        <span class="stat__value">{{ counts().Admin }}</span>
+        <span class="stat__label">Administradores</span>
       </div>
     </section>
 
@@ -118,7 +118,7 @@
                   <button class="btn btn--sm btn--primary" type="button" (click)="deactivate(user)">Sí</button>
                   <button class="btn btn--sm btn--ghost" type="button" (click)="confirmingId.set(null)">No</button>
                 } @else {
-                  @if (user.role !== 'Customer' && user.isActive) {
+                  @if (user.isActive) {
                     <button class="btn btn--sm btn--ghost" type="button" (click)="openPassword(user)">Contraseña</button>
                   }
                   @if (!isSelf(user)) {

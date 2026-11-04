@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { toApiError } from '../../core/api/api-error';
 import { AuthService } from '../../core/auth/auth.service';
@@ -22,7 +22,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 /**
  * Main public view: brand hero (Figma Frame 1) + menu from the API (Figma Frame 4) + cart.
- * Customers order without an account. Admin access only appears with ?admin=true.
+ * Customers order without an account. The staff sign-in (every role) only appears with ?admin=true.
  */
 @Component({
   selector: 'app-home-page',
@@ -37,6 +37,8 @@ export class HomePage {
 
   /** Bound from the ?admin= query param (withComponentInputBinding). */
   readonly admin = input<string>();
+  /** ?motivo= after a session ended; opens the sign-in with the explanation. */
+  readonly motivo = input<string>();
 
   protected readonly brand = BRAND;
   protected readonly adminEnabled = computed(() => this.admin() === 'true');
@@ -84,6 +86,10 @@ export class HomePage {
   protected readonly cartTotal = computed(() => this.cartLines().reduce((a, l) => a + l.product.price * l.quantity, 0));
 
   constructor() {
+    // Coming back from a closed session: show the sign-in right away with the reason
+    effect(() => {
+      if (this.adminEnabled() && this.motivo() && !this.auth.isAuthenticated()) untracked(() => this.panel.set('access'));
+    });
     this.orders.storeStatus().subscribe({ next: (s) => this.status.set(s), error: () => this.status.set(null) });
     this.orders.menu().subscribe({
       next: (products) => {

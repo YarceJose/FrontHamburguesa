@@ -102,6 +102,11 @@
     animation: orbit 80s linear infinite;
     will-change: transform;
 
+    // Users who ask the OS for less motion get still circles
+    @media (prefers-reduced-motion: reduce) {
+      animation: none !important;
+    }
+
     &--yellow {
       width: clamp(160px, 28vw, 380px);
       aspect-ratio: 1;
